@@ -5,7 +5,7 @@
  * Empty means there is nothing occupying the cell and it can be moved through
  * Food means there is food in that cell
 *)
-type cell_status = Player of Player.t | Trail of player.t | Wall | Empty | Food
+type cell_status = Player of Player.t | Trail of Player.t | Wall | Empty | Food
 (*
   We will use an x, y coordinate system describing the positions of players, etc.
   The origin will be at the center of the board
@@ -50,7 +50,7 @@ val players: t -> Player.t list
 (* act grid player dir will return a tuple with new grid state in which the player `player`
  * has moved in the direction `dir` and also a JSON representation of the changes made
  *)
-val act: t -> int -> direction -> (t, Yojson.Basic.json)
+val act: t -> int -> direction -> t * Yojson.Basic.json
 
 (* spawn_food grid will return a new grid state with food spawned in a random location
  *
