@@ -19,9 +19,6 @@ type rules = {
   food_probability: float;
 }
 
-(* Players can move in one of these directions *)
-type direction = Up | Down | Left | Right
-
 type t
 type death_handler = t -> string -> unit
 
@@ -77,10 +74,10 @@ val rules: t -> rules
 (* All the players on this board *)
 val players: t -> Player.t list
 
-(* `act grid player dir` will return a new grid state in which the player with id `player`
- * has moved in the direction `dir`
+(* `act grid player dir` will return a new grid state in which all players have moved
+ * in their current direction
  *)
-val act: t -> string -> direction -> t
+val act: t -> t
 
 (* `spawn_food grid` will spawn food somewhere random and return where it spawned
  * the likelihood of food actually spawning is dictated by the rules this Grid
