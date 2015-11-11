@@ -25,7 +25,7 @@ let handler id req recv send =
   response ()
 
 (* start our server locally on port 3110 *)
-let uri = Uri.of_string "http://10.211.55.4:3113"
+let uri = Uri.of_string "http://0.0.0.0:3110"
 let _ = serve uri handler
 
 (* Keep the runloop alive *)

@@ -6,7 +6,7 @@ npm install websocket
 
 */
 
-var SERVER_URL = "http://10.211.55.4:3113/";
+var SERVER_URL = "http://10.211.55.4:3110/";
 
 var WebSocketClient = require('websocket').client;
 
