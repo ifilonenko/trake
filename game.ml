@@ -7,6 +7,9 @@ type t = unit
 let create a p g =
   ()
 
+let create_from_json a p j h =
+  ()
+
 (* TCP port this game is running on *)
 let port s =
   3110

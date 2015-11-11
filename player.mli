@@ -3,8 +3,24 @@ type color = int * int * int
 
 type t
 
+(* TODO: Figure out which function to take for create_human to process input *)
+val create_human: color -> t
+
+(* create_ai clr will create an AI player with the given color *)
+val create_ai: color -> t
+
+val is_human: t -> bool
+val is_ai: t -> bool
+
+(* val current_direction: t -> Grid.direction *)
+
+(* Used for human players, when Game.t receives a message from this player to turn
+ * it will call this function for the player instance
+ *)
+(* val set_current_direction: t -> Grid.direction -> unit *)
+
 (* Unique ID representing this player *)
-val player_id: t -> int
+val player_id: t -> string
 
 (* Gives the given player's color  *)
 val color: t -> color

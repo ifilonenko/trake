@@ -5,27 +5,57 @@
  * Empty means there is nothing occupying the cell and it can be moved through
  * Food means there is food in that cell
 *)
-type cell_status = Player of Player.t | Trail of Player.t | Wall | Empty | Food
+type cell_status = Player of string | Trail of string | Wall | Empty | Food
 (*
   We will use an x, y coordinate system describing the positions of players, etc.
   The origin will be at the center of the board
 *)
 type cell = int * int
 
+
 type rules = {
   trail_length: int;
   ticks_per_second: int;
+  food_probability: float;
 }
 
 (* Players can move in one of these directions *)
 type direction = Up | Down | Left | Right
 
 type t
+type death_handler = t -> string -> unit
 
-(* cell_of_player grid i will give the current location of
- * the player at index i in grid where i is the index of the player in the players array
+(* returns a unique identifier for this grid *)
+val grid_id: t -> string
+
+(* `grid_of_json path handler` will load a new Grid instance from the json file
+ * handler is a function that takes a grid and player id. It will be called
+ * every time a player dies
  *)
-val cell_of_player: t -> int -> cell
+val grid_of_json: string -> death_handler -> t
+
+(* `create (w, h) rules handler` will create a rectangular grid with the given rules
+ * handler is a function that takes a grid and player id. It will be called
+ * every time a player dies
+ *)
+val create: int * int -> rules -> death_handler -> t
+
+(* `add_player grid p` will add the given player to the grid
+ *)
+val add_player: t -> Player.t -> t
+
+(* forcibly kills a given player, useful if they disconnected or something *)
+val kill_player: t -> Player.t -> t
+
+(* `cell_of_player grid i` will give the current location of
+ * the player with id i in grid where i the player's id
+ *)
+val cell_of_player: t -> string -> cell option
+
+(* `trail_of_player grid id` will return an optional list of cells
+ * occupied by the given player's trail
+ *)
+val trail_of_player: t -> string -> (cell list) option
 
 (* Gives occupation status of the given cell *)
 val status_of_cell: t -> cell -> cell_status
@@ -47,15 +77,16 @@ val rules: t -> rules
 (* All the players on this board *)
 val players: t -> Player.t list
 
-(* act grid player dir will return a tuple with new grid state in which the player `player`
- * has moved in the direction `dir` and also a JSON representation of the changes made
+(* `act grid player dir` will return a new grid state in which the player with id `player`
+ * has moved in the direction `dir`
  *)
-val act: t -> int -> direction -> t * Yojson.Basic.json
+val act: t -> string -> direction -> t
 
-(* spawn_food grid will return a new grid state with food spawned in a random location
- *
+(* `spawn_food grid` will spawn food somewhere random and return where it spawned
+ * the likelihood of food actually spawning is dictated by the rules this Grid
+ * was created with. It returns a tuple consisting of the new grid state and the location of the food
  *)
-val spawn_food: t -> t
+val spawn_food: t -> (t * cell option)
 
 (* Returns a JSON representation of this grid with all of its cells, dimensions, and rules
  * Format:
