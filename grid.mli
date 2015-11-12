@@ -37,12 +37,12 @@ val grid_of_json: string -> death_handler -> t
  *)
 val create: int * int -> rules -> death_handler -> t
 
-(* `add_player grid p` will add the given player to the grid
+(* `add_player grid p` will add player represneted by the given ID to the grid
  *)
-val add_player: t -> Player.t -> t
+val add_player: t -> string -> t
 
-(* forcibly kills a given player, useful if they disconnected or something *)
-val kill_player: t -> Player.t -> t
+(* forcibly kills a player represented by the given id, useful if they disconnected or something *)
+val kill_player: t -> string -> t
 
 (* `cell_of_player grid i` will give the current location of
  * the player with id i in grid where i the player's id
@@ -70,9 +70,6 @@ val cells: t -> (cell_status list) list
 
 (* Amount of times per second that the board state is updated *)
 val rules: t -> rules
-
-(* All the players on this board *)
-val players: t -> Player.t list
 
 (* `act grid player dir` will return a new grid state in which all players have moved
  * in their current direction

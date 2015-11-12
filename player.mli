@@ -39,6 +39,12 @@ val label: t -> string
 (* Gives the given player's color  *)
 val color: t -> color
 
+(* Update should be called after ticks. It should update current_direction for the next tick
+ * [update player grid diff] should either evaluate a new current_direction for AI or
+ * send the given json to the player
+ *)
+val update: t -> Grid.t -> Yojson.Basic.json -> unit
+
 (* JSON representation of this player as:
   {
      id: string

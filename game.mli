@@ -22,3 +22,6 @@ val grid: t -> Grid.t
 
 (* Prompts players for next move, updates boards, evaluates kills, etc *)
 val tick: t -> t
+
+(* All the players in this game *)
+val players: t -> Player.t list
