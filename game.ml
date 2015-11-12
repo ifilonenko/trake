@@ -47,6 +47,7 @@ let start s =
   let _ = serve uri handler in
 
   (* Keep the runloop alive *)
+  (* TODO: Remove this after we add the webservice, or itll block *)
   Lwt_main.run (fst (Lwt.wait ()))
 
 let tick s =

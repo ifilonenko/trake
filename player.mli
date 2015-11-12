@@ -1,20 +1,24 @@
 (* RGB color where each int is from 0-255 *)
 type color = int * int * int
 
+type player_status = Alive | Dead
+
 (* Players can move in one of these directions *)
 type direction = Up | Down | Left | Right
 
 type t
 
-(* TODO: Figure out which function to take for create_human to process input *)
-val create_human: color -> t
+(* creates a human player given a color and a label *)
+val create_human: color -> string -> t
 
-(* create_ai clr will create an AI player with the given color *)
-val create_ai: color -> t
+(* create_ai clr will create an AI player with the given color and label *)
+val create_ai: color -> string -> t
 
+(* Distinguishes between human or AI players *)
 val is_human: t -> bool
 val is_ai: t -> bool
 
+(* direction the player is currently looking *)
 val current_direction: t -> direction
 
 (* Used for human players, when Game.t receives a message from this player to turn
@@ -22,8 +26,15 @@ val current_direction: t -> direction
  *)
 val set_current_direction: t -> direction -> unit
 
+(* tells if the player is currently alive or dead *)
+val current_status: t -> player_status
+val set_current_status: t -> player_status -> unit
+
 (* Unique ID representing this player *)
-val player_id: t -> string
+val id: t -> string
+
+(* Human readable name for this player *)
+val label: t -> string
 
 (* Gives the given player's color  *)
 val color: t -> color
