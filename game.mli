@@ -3,10 +3,15 @@
  * It is also responsible for managing ticks, to coordinate movement
  *)
 type t
+type rules = {
+  trail_length: int;
+  ticks_per_second: float;
+  food_probability: float;
+}
 
 (* creates a game instance given a domain/ip, port, and a grid *)
-val create: string -> int -> Grid.t -> t
-val create_from_json: string -> int -> string -> Grid.death_handler -> t
+val create: string -> int -> Grid.t -> rules -> t
+val create_from_json: string -> int -> string -> rules -> t
 
 (* TCP port this game is running on *)
 val port: t -> int
@@ -21,7 +26,7 @@ val start: t -> unit
 val grid: t -> Grid.t
 
 (* Prompts players for next move, updates boards, evaluates kills, etc *)
-val tick: t -> t
+val tick: t -> unit -> unit Lwt.t
 
-(* All the players in this game *)
-val players: t -> Player.t list
+(* Game rules *)
+val rules: t -> rules
