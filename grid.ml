@@ -2,7 +2,8 @@ type cell_status = Player of string | Trail of string | Wall | Empty | Food
 type cell = int * int
 
 type t = {
-    cells: (cell, cell_status) Hashtbl.t;
+    walls: (cell * cell_status) list;
+    food: cell option;
     dimensions: int * int;
     players: Player.t list;
 }
@@ -11,9 +12,24 @@ let from_json_file path =
   failwith "Unimplemented"
 
 let create dims =
+  let rec gen_vert x y =
+    if y > 0 then
+      ((x, y), Wall)::(gen_vert x (y - 1))
+    else
+      []
+  in
+  let rec gen_horiz x y =
+    if x > 0 then
+      ((x, y), Wall)::(gen_horiz (x - 1) y)
+    else
+      []
+  in
+  let (w, h) = dims in
+
   {
     players = [];
-    cells = Hashtbl.create (((fst dims) / 2) * ((snd dims) / 2));
+    food = None;
+    walls = (gen_vert 0 h) @ (gen_vert w h) @ (gen_horiz w 0) @ (gen_horiz w h);
     dimensions = dims;
   }
 
@@ -25,7 +41,8 @@ let add_player g p =
 
 let status_of_cell g c =
   try
-    Some (Hashtbl.find g.cells c)
+  (*TODO: Implement this*)
+    None
   with
   | _ -> None
 

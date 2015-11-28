@@ -8,19 +8,17 @@ type rules = {
   food_probability: float;
 }
 
-type t' = {
+type t = {
   rules: rules;
   grid: Grid.t;
-  callbacks: (int * (Frame.t -> unit Lwt.t)) list;
+  mutable callbacks: (int * (Frame.t -> unit Lwt.t)) list;
   host: string;
   port: int;
-  started: bool;
+  mutable started: bool;
 }
 
-type t = t' ref
-
 let create a p g r =
-  ref {
+  {
     rules = r;
     host = a;
     port = p;
@@ -30,7 +28,7 @@ let create a p g r =
   }
 
 let create_from_json a p j r =
-  ref {
+  {
     rules = r;
     host = a;
     port = p;
@@ -41,18 +39,17 @@ let create_from_json a p j r =
 
 (* TCP port this game is running on *)
 let port s =
-  !s.port
+  s.port
 
 (* Web address to access this game *)
 let host s =
-  !s.host
+  s.host
 
 let grid s =
-  !s.grid
+  s.grid
 
 let rules s =
-  !s.rules
-
+  s.rules
 
 let receive_frame s player_id content =
   ()

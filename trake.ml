@@ -1,4 +1,5 @@
 (* opam pin add lwt 2.4.8 *)
+(* sudo apt-get install -qq -yy libgmp-dev *)
 (* opam install "websocket=2.1" *)
 (* cs3110 compile -p yojson,lwt.unix,websocket.lwt,core -thread trake *)
 
