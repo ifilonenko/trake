@@ -31,7 +31,7 @@ val create: int * int -> t
 val add_player: t -> Player.t -> t
 
 (* Gives occupation status of the given cell *)
-val status_of_cell: t -> cell -> cell_status option
+val status_of_cell: t -> cell -> cell_status
 
 (* Gives maximum width and height of the grid,
  * though it may not be a perfect quadrilateral

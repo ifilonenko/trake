@@ -44,6 +44,9 @@ let direction p =
 let update_direction p d =
   p.direction <- d
 
+let update_position p c =
+  p.position <- c
+
 let is_alive p =
   p.alive
 

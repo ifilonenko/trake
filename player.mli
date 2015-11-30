@@ -26,6 +26,9 @@ val direction: t -> direction
  *)
 val update_direction: t -> direction -> unit
 
+(* Used for human players, when Game.t receives *)
+val update_position: t -> int * int -> unit
+
 (* tells if the player is currently alive or dead *)
 val is_alive: t -> bool
 val kill: t -> unit
@@ -47,7 +50,7 @@ val to_json: t -> Yojson.Basic.json
 
 val tail_length: t -> int
 val tail: t -> (int * int) list
-val eat_food: t -> unit
 val position: t -> int * int
+val eat_food: t -> unit
 val advance: t -> unit
 val occupies_cell: t -> int * int -> bool
