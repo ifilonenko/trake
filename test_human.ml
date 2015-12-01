@@ -490,9 +490,86 @@ TEST_UNIT = Player.tail new_player === []
 TEST_UNIT = Player.is_alive new_player === false
 TEST_UNIT = Grid.status_of_cell new_grid (Player.position new_player) === Util.Wall
 
+let grid2 = Grid.create (50, 50)
+let third_player = Player.create_human 3 5 (1, 1, 1) "ilan" 
+let fourth_player = Player.create_human 4 10 (1, 1, 1) "eric"
+let new_grid = Grid.add_player grid2 third_player
+let new_grid = Grid.add_player new_grid fourth_player
+TEST_UNIT = Grid.players new_grid === [fourth_player; third_player]
+
+let () = Player.update_position third_player (1, 1)
+let () = Player.update_position fourth_player (1, 2)
+let () = Player.update_direction third_player Util.Right
+let () = Player.update_direction fourth_player Util.Right
+
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (2, 1)
+TEST_UNIT = Player.position fourth_player === (2, 2)
+TEST_UNIT = Player.tail third_player === [(1,1)]
+TEST_UNIT = Player.tail fourth_player === [(1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (3, 1)
+TEST_UNIT = Player.position fourth_player === (3, 2)
+TEST_UNIT = Player.tail third_player === [(2, 1); (1, 1)]
+TEST_UNIT = Player.tail fourth_player === [(2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (4, 1)
+TEST_UNIT = Player.position fourth_player === (4, 2)
+TEST_UNIT = Player.tail third_player === [(3, 1); (2, 1); (1, 1)]
+TEST_UNIT = Player.tail fourth_player === [(3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (5, 1)
+TEST_UNIT = Player.position fourth_player === (5, 2)
+TEST_UNIT = Player.tail third_player === [(4, 1); (3, 1); (2, 1); (1, 1)]
+TEST_UNIT = Player.tail fourth_player === [(4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (6, 1)
+TEST_UNIT = Player.position fourth_player === (6, 2)
+TEST_UNIT = Player.tail third_player === [(5, 1); (4, 1); (3, 1); (2, 1); (1, 1)]
+TEST_UNIT = Player.tail fourth_player === [(5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (7, 1)
+TEST_UNIT = Player.position fourth_player === (7, 2)
+TEST_UNIT = Player.tail third_player === [(6, 1); (5, 1); (4, 1); (3, 1); (2, 1)]
+TEST_UNIT = Player.tail fourth_player === [(6, 2); (5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (8, 1)
+TEST_UNIT = Player.position fourth_player === (8, 2)
+TEST_UNIT = Player.tail third_player === [(7, 1); (6, 1); (5, 1); (4, 1); (3, 1)]
+TEST_UNIT = Player.tail fourth_player === [(7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (9, 1)
+TEST_UNIT = Player.position fourth_player === (9, 2)
+TEST_UNIT = Player.tail third_player === [(8, 1); (7, 1); (6, 1); (5, 1); (4, 1)]
+TEST_UNIT = Player.tail fourth_player === [(8, 2); (7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Player.update_direction third_player Util.Down
+TEST_UNIT = Grid.status_of_cell new_grid (Util.add_cells 
+			(Player.position third_player) (Util.vector_of_direction 
+			(Player.direction third_player))) === Util.Player (Player.id fourth_player)
+let () = Grid.act new_grid
+TEST_UNIT = Player.position third_player === (9, 2)
+TEST_UNIT = Player.is_alive third_player === false
+TEST_UNIT = Player.tail third_player === []
+TEST_UNIT = Player.position fourth_player === (10, 2)
+TEST_UNIT = Player.tail fourth_player === [(9, 2); (8, 2); (7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Player.update_direction fourth_player Util.Down
+let () = Grid.act new_grid
+TEST_UNIT = Player.position fourth_player === (10, 3)
+TEST_UNIT = Player.tail fourth_player === [(10, 2); (9, 2); (8, 2); (7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2); (1, 2)]
+let () = Grid.act new_grid
+TEST_UNIT = Player.position fourth_player === (10, 4)
+TEST_UNIT = Player.tail fourth_player === [(10, 3); (10, 2); (9, 2); (8, 2); (7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2)]
+let () = Player.update_position fourth_player (48, 48)
+let () = Grid.act new_grid
+TEST_UNIT = Player.position fourth_player === (48, 49)
+TEST_UNIT = Player.is_alive fourth_player === false
+TEST_UNIT = Player.tail fourth_player === []
+
 TEST_UNIT = Util.vector_of_direction (Util.Up) === (0, -1)
 TEST_UNIT = Util.vector_of_direction (Util.Down) === (0, 1)
 TEST_UNIT = Util.vector_of_direction (Util.Left) === (-1, 0)
 TEST_UNIT = Util.vector_of_direction (Util.Right) === (1, 0)
 
 TEST_UNIT = Util.add_cells (1, 2) (2, 1) === (3, 3)
+
+let () = print_string "100% Passed\n"
