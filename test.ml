@@ -21,9 +21,9 @@ TEST_UNIT = Grid.status_of_cell grid (0, 1) === Util.Wall
 TEST_UNIT = Grid.status_of_cell grid (2, 1) === Util.Wall
 TEST_UNIT = Grid.status_of_cell grid (1, 1) === Util.Empty
 TEST_UNIT = Ai.distance_list p g === [1;1;1;1]
-TEST_UNIT = Player.direction p === Player.Down
+TEST_UNIT = Player.direction p === Util.Down
 let () = Ai.new_direction p g
-TEST_UNIT = Player.direction p === Player.Up
+TEST_UNIT = Player.direction p === Util.Up
 
 
 let new_grid = Grid.create (20, 20)
