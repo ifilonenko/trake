@@ -64,7 +64,7 @@ let distance_list p g =
 
 let new_direction p g =
   let distances = distance_list p g in
-  let directions = [Player.Up;Player.Down;Player.Left;Player.Right] in
+  let directions = [Util.Up;Util.Down;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes distances 0 (max_val distances)) in
   (* For ties, naive solution will just take the first one *)
   let best_direction = List.nth (direction_list max_indexes directions) 0 in

@@ -28,7 +28,8 @@ TEST_UNIT = Player.direction p === Player.Up
 
 let new_grid = Grid.create (20, 20)
 TEST_UNIT = Grid.dimensions new_grid === (20, 20)
-(* let added_players = Grid.add_player new_grid
+(*
+let added_players = Grid.add_player new_grid
 TEST_UNIT = Util.vector_of_direction (Util.Up) === (0, 1)
 TEST_UNIT = Util.vector_of_direction (Util.Down) === (0, -1)
 TEST_UNIT = Util.vector_of_direction (Util.Left) === (-1, 0)
