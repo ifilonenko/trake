@@ -5,7 +5,7 @@
  * Empty means there is nothing occupying the cell and it can be moved through
  * Food means there is food in that cell
 *)
-type cell_status = Player of string | Trail of string | Wall | Empty | Food
+type cell_status = Player of int | Trail of int | Wall | Empty | Food
 (*
   We will use an x, y coordinate system describing the positions of players, etc.
   The origin will be at the center of the board
