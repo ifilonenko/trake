@@ -27,7 +27,17 @@ let create_human id tl clr lbl =
   failwith "Unimplemented"
 
 let create_ai id tl clr lbl =
-  failwith "Unimplemented"
+  {
+    id = id;
+    label = lbl;
+    color = clr;
+    alive = true;
+    direction = Down;
+    tail_length = tl;
+    position = (1,1);
+    tail = [];
+    human = false;
+  }
 
 let id p =
   p.id
