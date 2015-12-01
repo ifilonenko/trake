@@ -1,9 +1,8 @@
-type cell_status = Player of string | Trail of string | Wall | Empty | Food
-type cell = int * int
+exception Invalid_Grid
 
 type t = {
-    walls: (cell * cell_status) list;
-    food: cell option;
+    walls: (Util.cell * Util.cell_status) list;
+    food: Util.cell option;
     dimensions: int * int;
     players: Player.t list;
 }
@@ -17,13 +16,13 @@ let create dims =
   else  *)
     let rec gen_vert x y =
       if y > 0 then
-        ((x, y), Wall)::(gen_vert x (y - 1))
+        ((x, y), Util.Wall)::(gen_vert x (y - 1))
       else
         []
     in
     let rec gen_horiz x y =
       if x > 0 then
-        ((x, y), Wall)::(gen_horiz (x - 1) y)
+        ((x, y), Util.Wall)::(gen_horiz (x - 1) y)
       else
         []
   in
@@ -32,7 +31,7 @@ let create dims =
     players = [];
     food = None;
     walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0)
-              @ (gen_horiz w (h - 1)) @ [((0, 0), Wall)];
+              @ (gen_horiz w (h - 1)) @ [((0, 0), Util.Wall)];
     dimensions = dims;
   }
 
@@ -44,24 +43,24 @@ let status_of_cell g c =
     | h::t -> (let rec match_trail trl =
                 match trl with
                 | (x, y)::tl -> if ((fst c) = x && (snd c) = y)
-                                then Trail (Player.id h)
+                                then Util.Trail (Player.id h)
                                 else match_trail tl
                 | [] -> trail_helper t
               in
               match_trail (Player.tail h))
-    | [] -> Empty
+    | [] -> Util.Empty
   in
   let rec player_helper players =
     match players with
     | h::t -> if ((fst c) = (fst (Player.position h)) &&
-                 (snd c) = (snd (Player.position h))) then Player (Player.id h)
+                 (snd c) = (snd (Player.position h))) then Util.Player (Player.id h)
               else
                 player_helper t
     | [] -> trail_helper g.players
   in
   let food_helper f =
     match f with
-    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Food
+    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Util.Food
                      else player_helper g.players
     | None -> player_helper g.players
   in
@@ -73,23 +72,23 @@ let status_of_cell g c =
   in
   wall_helper g.walls
   with
-  | _ -> Wall
+  | _ -> Util.Wall
 
 let helper g (x, y) =
-  status_of_cell g (x, y) = Empty
+  status_of_cell g (x, y) = Util.Empty
 
 let rec add_player g p =
   (* TODO: Set the player's position and direction*)
   let x = Random.int (fst g.dimensions) in
   let y = Random.int (snd g.dimensions) in
-  if (status_of_cell g (x, y) <> Empty) then
+  if (status_of_cell g (x, y) <> Util.Empty) then
     add_player g p
   else
     if (helper g (x, y + 1) && helper g (x, y + 2) &&
        helper g (x, y + 3) && helper g (x, y + 4))
     then
       let () = Player.update_position p (x, y) in
-      let () = Player.update_direction p Player.Down in
+      let () = Player.update_direction p Util.Down in
       { g with
         players = p::(g.players)
       }
@@ -98,7 +97,7 @@ let rec add_player g p =
        helper g (x, y - 3) && helper g (x, y - 4))
     then
       let () = Player.update_position p (x, y) in
-      let () = Player.update_direction p Player.Up in
+      let () = Player.update_direction p Util.Up in
       { g with
         players = p::(g.players)
       }
@@ -107,7 +106,7 @@ let rec add_player g p =
        helper g (x + 3, y) && helper g (x + 4, y))
     then
       let () = Player.update_position p (x, y) in
-      let () = Player.update_direction p Player.Right in
+      let () = Player.update_direction p Util.Right in
       { g with
         players = p::(g.players)
       }
@@ -116,7 +115,7 @@ let rec add_player g p =
        helper g (x - 3, y) && helper g (x - 4, y))
     then
       let () = Player.update_position p (x, y) in
-      let () = Player.update_direction p Player.Left in
+      let () = Player.update_direction p Util.Left in
       { g with
         players = p::(g.players)
       }
@@ -140,8 +139,8 @@ let prune_player g player =
   let pos = Player.position player in
   let status = status_of_cell g pos in
   match status with
-  | Empty -> () (* all good, player can move here *)
-  | Food -> Player.eat_food player
+  | Util.Empty -> () (* all good, player can move here *)
+  | Util.Food -> Player.eat_food player
   | _ -> Player.kill player
 
 let act g =
