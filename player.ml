@@ -13,7 +13,17 @@ type t = {
 }
 
 let create_human id tl clr lbl =
-  failwith "Unimplemented"
+  {
+    id = id;
+    label = lbl;
+    color = clr;
+    alive = true;
+    direction = Util.Down;
+    tail_length = tl;
+    position = (1, 1);
+    tail = [];
+    human = true;
+  }
 
 let create_ai id tl clr lbl =
   {
@@ -88,12 +98,16 @@ let advance p =
   let new_tail = pos::(tail p) in
 
   (* Remove extra pieces from tail list *)
-  let rec helper t l =
+  let rec helper tl l accum =
     if l <= 0 then
-      t
+      accum
     else
-      helper (List.tl t) (l - 1)
+      match tl with
+      | h::t -> helper t (l - 1) (h::accum)
+      | [] -> []
   in
-
-  p.tail <- (helper new_tail ((List.length new_tail) - (tail_length p)));
+  if tail p = [] then
+    p.tail <- (helper new_tail (tail_length p) [])
+  else
+    p.tail <- (helper new_tail ((List.length new_tail) - (tail_length p)) []);
   p.position <- new_pos
