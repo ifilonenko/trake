@@ -54,11 +54,11 @@ let distance_list p g =
       | _ ->
         let curr = (pos, ai_y) in
         match Grid.status_of_cell g curr with
-        | Player _ -> (pos-ai_x)
-        | Trail _ -> (pos-ai_x)
-        | Wall -> (g_x - ai_x)
-        | Empty -> right_distance (pos+1) g
-        | Food -> (pos-ai_x) (* We are scared of food right now *) in
+        | Util.Player _ -> (pos-ai_x)
+        | Util.Trail _ -> (pos-ai_x)
+        | Util.Wall -> (g_x - ai_x)
+        | Util.Empty -> right_distance (pos+1) g
+        | Util.Food -> (pos-ai_x) (* We are scared of food right now *) in
     [(up_distance ai_y g);(down_distance ai_y g);
     (left_distance ai_x g);(right_distance ai_x g);]
 
