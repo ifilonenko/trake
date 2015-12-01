@@ -36,7 +36,6 @@ TEST_UNIT = Util.vector_of_direction (Util.Left) === (-1, 0)
 TEST_UNIT = Util.vector_of_direction (Util.Right) === (1, 0)
 
 TEST_UNIT = Util.add_cells (1, 2) (2, 1) === (3, 3)
-(*
 TEST "status_of_cell_grid" =
 TEST "create_grid" =
 TEST "add_player_grid" =
