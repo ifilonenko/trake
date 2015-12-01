@@ -1,5 +1,4 @@
-exception Invalid_Grid
-type cell_status = Player of string | Trail of string | Wall | Empty | Food
+type cell_status = Player of string | Trail of int | Wall | Empty | Food
 type cell = int * int
 
 type t = {
@@ -12,7 +11,6 @@ type t = {
 let from_json_file path =
   failwith "Unimplemented"
 
-(*Precondition: Dims must be at least 20x20 *)
 let create dims =
   let (w, h) = dims in
   (* if (w < 20 || h < 20) then raise Invalid_Grid
@@ -33,7 +31,8 @@ let create dims =
   {
     players = [];
     food = None;
-    walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0) @ (gen_horiz w (h - 1)) @ [((0, 0), Wall)];
+    walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0) 
+              @ (gen_horiz w (h - 1)) @ [((0, 0), Wall)];
     dimensions = dims;
   }
 
@@ -44,7 +43,9 @@ let status_of_cell g c =
     match players with 
     | h::t -> (let rec match_trail trl = 
                 match trl with 
-                | (x, y)::tl -> if ((fst c) = x && (snd c) = y) then Trail (Player.label h) else match_trail tl
+                | (x, y)::tl -> if ((fst c) = x && (snd c) = y) 
+                                then Trail (Player.id h) 
+                                else match_trail tl
                 | [] -> trail_helper t 
               in
               match_trail (Player.tail h))
@@ -52,17 +53,22 @@ let status_of_cell g c =
   in
   let rec player_helper players =
     match players with
-    | h::t -> if ((fst c) = (fst (Player.position h)) && (snd c) = (snd (Player.position h))) then Player (Player.label h) else player_helper t
+    | h::t -> if ((fst c) = (fst (Player.position h)) && 
+                 (snd c) = (snd (Player.position h))) then Player (Player.id h) 
+              else 
+                player_helper t
     | [] -> trail_helper g.players
   in
   let food_helper f =
     match f with 
-    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Food else player_helper g.players
+    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Food 
+                     else player_helper g.players
     | None -> player_helper g.players
   in
   let rec wall_helper lst =
     match lst with
-    | ((x, y), cs)::t -> if ((fst c) = x && (snd c) = y) then cs else wall_helper t
+    | ((x, y), cs)::t -> if ((fst c) = x && (snd c) = y) then cs 
+                         else wall_helper t
     | [] -> food_helper g.food
   in
   wall_helper g.walls

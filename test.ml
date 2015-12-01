@@ -24,6 +24,18 @@ TEST_UNIT = Ai.distance_list p g === [1;1;1;1]
 TEST_UNIT = Player.direction p === Player.Down
 let () = Ai.new_direction p g
 TEST_UNIT = Player.direction p === Player.Up
+
+
+let new_grid = Grid.create (20, 20)
+TEST_UNIT = Grid.dimensions new_grid === (20, 20)
+(* let added_players = Grid.add_player new_grid
+
+TEST_UNIT = Player.vector_of_direction Player.Up === (0, 1)
+TEST_UNIT = Player.vector_of_direction Player.Down === (0, -1)
+TEST_UNIT = Player.vector_of_direction Player.Left === (-1, 0)
+TEST_UNIT = Player.vector_of_direction Player.Right === (1, 0)
+*)
+
 (*
 TEST "status_of_cell_grid" =
 TEST "create_grid" =
