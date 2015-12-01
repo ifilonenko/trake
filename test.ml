@@ -3,26 +3,27 @@ open Assertions
 let grid = Grid.create (3,3)
 
 TEST_UNIT = Grid.dimensions grid === (3, 3)
-TEST_UNIT = Grid.status_of_cell grid (0, 0) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 0) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 0) === Grid.Wall                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-TEST_UNIT = Grid.status_of_cell grid (0, 2) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 2) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 2) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (0, 1) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 1) === Grid.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 1) === Grid.Empty
+TEST_UNIT = Grid.status_of_cell grid (0, 0) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (1, 0) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (2, 0) === Util.Wall                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+TEST_UNIT = Grid.status_of_cell grid (0, 2) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (1, 2) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (2, 2) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (0, 1) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (2, 1) === Util.Wall
+TEST_UNIT = Grid.status_of_cell grid (1, 1) === Util.Empty
 
 let new_grid = Grid.create (20, 20)
 
 TEST_UNIT = Grid.dimensions new_grid === (20, 20)
 let added_players = Grid.add_player new_grid 
 
-TEST_UNIT = Player.vector_of_direction Player.Up === (0, 1)
-TEST_UNIT = Player.vector_of_direction Player.Down === (0, -1)
-TEST_UNIT = Player.vector_of_direction Player.Left === (-1, 0)
-TEST_UNIT = Player.vector_of_direction Player.Right === (1, 0)
+TEST_UNIT = Util.vector_of_direction (Util.Up) === (0, 1)
+TEST_UNIT = Util.vector_of_direction (Util.Down) === (0, -1)
+TEST_UNIT = Util.vector_of_direction (Util.Left) === (-1, 0)
+TEST_UNIT = Util.vector_of_direction (Util.Right) === (1, 0)
 
+TEST_UNIT = Util.add_cells (1, 2) (2, 1) === (3, 3)
 (* 
 TEST "status_of_cell_grid" = 
 TEST "create_grid" =
