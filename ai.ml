@@ -24,31 +24,31 @@ let distance_list p g =
       | _ ->
         let curr = (ai_x,pos) in
         match Grid.status_of_cell g curr with
-        | Player _ -> (pos-ai_y)
-        | Trail _ -> (pos-ai_y)
-        | Wall -> (g_y - ai_y)
-        | Empty -> up_distance (pos+1) g
-        | Food -> (pos-ai_y) (* We are scared of food right now *) in
+        | Util.Player _ -> (pos-ai_y)
+        | Util.Trail _ -> (pos-ai_y)
+        | Util.Wall -> (g_y - ai_y)
+        | Util.Empty -> up_distance (pos+1) g
+        | Util.Food -> (pos-ai_y) (* We are scared of food right now *) in
     let rec down_distance pos g =
       match (ai_x,pos) with
       | _ ->
         let curr = (ai_x,pos) in
         match Grid.status_of_cell g curr with
-        | Player _ -> (ai_y - pos)
-        | Trail _ -> (ai_y - pos)
-        | Wall -> (ai_y)
-        | Empty -> down_distance (pos - 1) g
-        | Food -> (ai_y - pos) (* We are scared of food right now *) in
+        | Util.Player _ -> (ai_y - pos)
+        | Util.Trail _ -> (ai_y - pos)
+        | Util.Wall -> (ai_y)
+        | Util.Empty -> down_distance (pos - 1) g
+        | Util.Food -> (ai_y - pos) (* We are scared of food right now *) in
     let rec left_distance pos g =
       match (ai_x,pos) with
       | _ ->
         let curr = (pos, ai_y) in
         match Grid.status_of_cell g curr with
-        | Player _ -> (ai_x - pos)
-        | Trail _ -> (ai_x - pos)
-        | Wall -> (ai_x)
-        | Empty -> left_distance (pos - 1) g
-        | Food -> (ai_x - pos) (* We are scared of food right now *) in
+        | Util.Player _ -> (ai_x - pos)
+        | Util.Trail _ -> (ai_x - pos)
+        | Util.Wall -> (ai_x)
+        | Util.Empty -> left_distance (pos - 1) g
+        | Util.Food -> (ai_x - pos) (* We are scared of food right now *) in
     let rec right_distance pos g =
       match (ai_x,pos) with
       | _ ->
