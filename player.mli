@@ -1,32 +1,31 @@
 (* RGB color where each int is from 0-255 *)
 type color = int * int * int
 
-(* Players can move in one of these directions *)
-type direction = Up | Down | Left | Right
-
 type t
 
 (* creates a human player given an id, trail length, a color and a label *)
 val create_human: int -> int -> color -> string -> t
 
-val id: t -> int
-
 (* create_ai id clr will create an AI player with the given color and label *)
 val create_ai: int -> int -> color -> string -> t
 
-(* Distinguishes between human or AI players *)
+val id: t -> int
+
+(*  Distinguishes between human or AI players *)
 val is_human: t -> bool
 val is_ai: t -> bool
 
 (* direction the player is currently looking *)
-val direction: t -> direction
+val direction: t -> Util.direction
 
 (* Used for human players, when Game.t receives a message from this player to turn
  * it will call this function for the player instance
  *)
-val update_direction: t -> direction -> unit
+val update_direction: t -> Util.direction -> unit
 
-(* Used for human players, when Game.t receives *)
+(* Used for human players, when Game.t receives the command to start the game it
+ * updates the position of the player
+ *)
 val update_position: t -> int * int -> unit
 
 (* tells if the player is currently alive or dead *)
@@ -49,8 +48,13 @@ val color: t -> color
 val to_json: t -> Yojson.Basic.json
 
 val tail_length: t -> int
-val tail: t -> (int * int) list
-val position: t -> int * int
 val eat_food: t -> unit
-val advance: t -> unit
+val position: t -> int * int
+val tail: t -> (int * int) list
+
+(* Determines if the player occupies the given cell *)
 val occupies_cell: t -> int * int -> bool
+
+(* Calculates the new position and updates the player to advance to that 
+ * new position and it readjusts the tail *)
+val advance: t -> unit
