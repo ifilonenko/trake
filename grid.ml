@@ -79,6 +79,7 @@ let helper g (x, y) =
 
 let rec add_player g p =
   (* TODO: Set the player's position and direction*)
+  let () = Random.self_init() in
   let x = Random.int (fst g.dimensions) in
   let y = Random.int (snd g.dimensions) in
   if (status_of_cell g (x, y) <> Util.Empty) then
@@ -141,6 +142,7 @@ let prune_player g player =
   match status with
   | Util.Empty -> () (* all good, player can move here *)
   | Util.Food -> Player.eat_food player
+  | Util.Player e -> if (e = Player.id player) then () else Player.kill player
   | _ -> Player.kill player
 
 let act g =
