@@ -137,17 +137,18 @@ let players g =
   g.players
 
 let prune_player g player =
-  let pos = Player.position player in
+  let pos = Util.add_cells (Player.position player) 
+            (Util.vector_of_direction (Player.direction player)) in
   let status = status_of_cell g pos in
   match status with
   | Util.Empty -> () (* all good, player can move here *)
   | Util.Food -> Player.eat_food player
-  | Util.Player e -> if (e = Player.id player) then () else Player.kill player
   | _ -> Player.kill player
 
 let act g =
+  (* Check if the cell they want to move into is occupied *)
+  List.iter (prune_player g) (players g);
+
   (* Advance all players *)
   List.iter Player.advance (players g);
 
-  (* Check if the cell they want to move into is occupied *)
-  List.iter (prune_player g) (players g);
