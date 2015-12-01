@@ -1,16 +1,4 @@
-(*  describes the current state of a cell
- * Player of x means that the cell is occupied by a player's actual vehicle
- * Trail of x means the cell is occupied by the trail of the player x
- * Wall means the cell is actually a wall and cannot be penetrated
- * Empty means there is nothing occupying the cell and it can be moved through
- * Food means there is food in that cell
-*)
-type cell_status = Player of string | Trail of string | Wall | Empty | Food
-(*
-  We will use an x, y coordinate system describing the positions of players, etc.
-  The origin will be at the center of the board
-*)
-type cell = int * int
+exception Invalid_Grid
 
 type t
 
@@ -20,28 +8,25 @@ type t
  *)
 val from_json_file: string -> t
 
-(* `create (w, h) handler` will create a rectangular grid
+(* Precondition: dimensions need to be at least 20x20
+ * `create (w, h) handler` will create a rectangular grid
  * handler is a function that takes a grid and player id. It will be called
  * every time a player dies
  *)
 val create: int * int -> t
 
-(* `add_player grid p` will add player represneted by the given ID to the grid
+(* Gives occupation status of the given cell *)
+val status_of_cell: t -> int * int -> Util.cell_status
+
+(* `add_player grid p` will add the given player represented by an ID to the grid
+ * in a random position generated using our formula
  *)
 val add_player: t -> Player.t -> t
-
-(* Gives occupation status of the given cell *)
-val status_of_cell: t -> cell -> cell_status
 
 (* Gives maximum width and height of the grid,
  * though it may not be a perfect quadrilateral
  *)
 val dimensions: t -> int * int
-
-(* `spawn_food grid` will spawn food somewhere random and return where it spawned *)
-val spawn_food: t -> unit
-
-val act: t -> unit
 
 (* Returns a JSON representation of this grid with all of its cells, dimensions, and rules
  * Format:
@@ -51,5 +36,16 @@ val act: t -> unit
  *)
 val to_json: t -> Yojson.Basic.json
 
+(* `spawn_food grid` will spawn food somewhere random and return where it spawned *)
+val spawn_food: t -> unit
+
 (* All the players in this game *)
 val players: t -> Player.t list
+
+(* Determines what should happen to the player based on the player's current position *)
+val prune_player: t -> Player.t -> unit
+
+(* Advances all the players and determines what should happent o the player
+ * based on what the player decided to do
+ *)
+val act: t -> unit

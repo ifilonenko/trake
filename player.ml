@@ -1,27 +1,16 @@
 type color = int * int * int
-type direction = Up | Down | Left | Right
 
 type t = {
   id: int;
   label: string;
   color: color;
   mutable alive: bool;
-  mutable direction: direction;
+  mutable direction: Util.direction;
   mutable tail_length: int;
   mutable position: int * int;
   mutable tail: (int * int) list;
   human: bool
 }
-
-let add_cells (c1x, c1y) (c2x, c2y) =
-  (c1x + c2x, c1y + c2y)
-
-let vector_of_direction d =
-  match d with
-  | Up -> (0, 1)
-  | Down -> (0, -1)
-  | Left -> (1, 0)
-  | Right -> (-1, 0)
 
 let create_human id tl clr lbl =
   failwith "Unimplemented"
@@ -91,9 +80,9 @@ let occupies_cell p c =
 
 let advance p =
   (* Get new position *)
-  let delta = vector_of_direction (direction p) in
+  let delta = Util.vector_of_direction (direction p) in
   let pos = position p in
-  let new_pos = add_cells pos delta in
+  let new_pos = Util.add_cells pos delta in
 
   (* Add old position to tail list *)
   let new_tail = pos::(tail p) in

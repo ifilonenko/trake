@@ -1,4 +1,4 @@
-type cell_status = Player of string | Trail of int | Wall | Empty | Food
+type cell_status = Player of string | Trail of string | Wall | Empty | Food
 type cell = int * int
 
 type t = {
@@ -31,7 +31,7 @@ let create dims =
   {
     players = [];
     food = None;
-    walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0) 
+    walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0)
               @ (gen_horiz w (h - 1)) @ [((0, 0), Wall)];
     dimensions = dims;
   }
@@ -39,35 +39,35 @@ let create dims =
 let status_of_cell g c =
   try
   (*TODO: Implement this*)
-  let rec trail_helper players = 
-    match players with 
-    | h::t -> (let rec match_trail trl = 
-                match trl with 
-                | (x, y)::tl -> if ((fst c) = x && (snd c) = y) 
-                                then Trail (Player.id h) 
+  let rec trail_helper players =
+    match players with
+    | h::t -> (let rec match_trail trl =
+                match trl with
+                | (x, y)::tl -> if ((fst c) = x && (snd c) = y)
+                                then Trail (Player.id h)
                                 else match_trail tl
-                | [] -> trail_helper t 
+                | [] -> trail_helper t
               in
               match_trail (Player.tail h))
     | [] -> Empty
   in
   let rec player_helper players =
     match players with
-    | h::t -> if ((fst c) = (fst (Player.position h)) && 
-                 (snd c) = (snd (Player.position h))) then Player (Player.id h) 
-              else 
+    | h::t -> if ((fst c) = (fst (Player.position h)) &&
+                 (snd c) = (snd (Player.position h))) then Player (Player.id h)
+              else
                 player_helper t
     | [] -> trail_helper g.players
   in
   let food_helper f =
-    match f with 
-    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Food 
+    match f with
+    | Some (x, y) -> if ((fst c) = x && (snd c) = y) then Food
                      else player_helper g.players
     | None -> player_helper g.players
   in
   let rec wall_helper lst =
     match lst with
-    | ((x, y), cs)::t -> if ((fst c) = x && (snd c) = y) then cs 
+    | ((x, y), cs)::t -> if ((fst c) = x && (snd c) = y) then cs
                          else wall_helper t
     | [] -> food_helper g.food
   in
@@ -82,12 +82,12 @@ let rec add_player g p =
   (* TODO: Set the player's position and direction*)
   let x = Random.int (fst g.dimensions) in
   let y = Random.int (snd g.dimensions) in
-  if (status_of_cell g (x, y) <> Empty) then 
-    add_player g p 
+  if (status_of_cell g (x, y) <> Empty) then
+    add_player g p
   else
     if (helper g (x, y + 1) && helper g (x, y + 2) &&
        helper g (x, y + 3) && helper g (x, y + 4))
-    then 
+    then
       let () = Player.update_position p (x, y) in
       let () = Player.update_direction p Player.Down in
       { g with
@@ -96,7 +96,7 @@ let rec add_player g p =
     else
     if (helper g (x, y - 1) && helper g (x, y - 2) &&
        helper g (x, y - 3) && helper g (x, y - 4))
-    then 
+    then
       let () = Player.update_position p (x, y) in
       let () = Player.update_direction p Player.Up in
       { g with
@@ -105,7 +105,7 @@ let rec add_player g p =
     else
     if (helper g (x + 1, y) && helper g (x + 2, y) &&
        helper g (x + 3, y) && helper g (x + 4, y))
-    then 
+    then
       let () = Player.update_position p (x, y) in
       let () = Player.update_direction p Player.Right in
       { g with
@@ -114,7 +114,7 @@ let rec add_player g p =
     else
     if (helper g (x - 1, y) && helper g (x - 2, y) &&
        helper g (x - 3, y) && helper g (x - 4, y))
-    then 
+    then
       let () = Player.update_position p (x, y) in
       let () = Player.update_direction p Player.Left in
       { g with
