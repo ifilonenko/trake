@@ -7,7 +7,7 @@ let add_cells (c1x, c1y) (c2x, c2y) =
 
 let vector_of_direction d =
   match d with
-  | Up -> (0, 1)
-  | Down -> (0, -1)
-  | Left -> (1, 0)
-  | Right -> (-1, 0)
+  | Up -> (0, -1)
+  | Down -> (0, 1)
+  | Left -> (-1, 0)
+  | Right -> (1, 0)
