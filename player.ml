@@ -98,16 +98,18 @@ let advance p =
   let new_tail = pos::(tail p) in
 
   (* Remove extra pieces from tail list *)
-  let rec helper tl l accum =
+  let rec helper tl l =
     if l <= 0 then
-      accum
+      tl
     else
-      match tl with
-      | h::t -> helper t (l - 1) (h::accum)
+      let rev_list = List.rev tl in
+      match rev_list with
+      | h::t -> List.rev t
       | [] -> []
   in
-  if tail p = [] then
-    p.tail <- (helper new_tail (tail_length p) [])
+  if is_alive p = true then
+    let () = p.tail <- (helper new_tail ((List.length new_tail) - tail_length p))
+  in
+    p.position <- new_pos
   else
-    p.tail <- (helper new_tail ((List.length new_tail) - (tail_length p)) []);
-  p.position <- new_pos
+    p.position <- new_pos
