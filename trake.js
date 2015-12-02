@@ -1,27 +1,32 @@
-function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 TRAKE = {
+
+  ctx: null,
+
+  players: {},
 
   grid: {
     height: 640,
     width: 640,
-    rows: 100,
-    cols: 100,
-    border: 2,
-    color: "#eee"
+    rows: 50,
+    cols: 50,
+    border: 3,
+    color: "#eee",
+    wallColor: "#333",
+    foodColor: "purple"
   },
 
-  setCell: function(x,y,color) {
+  setCell: function(x,y,color,hollow) {
     var cellWidth = this.grid.width/this.grid.cols,
         cellHeight = this.grid.height/this.grid.rows,
         border = this.grid.border;
+
+    // Clear space to prevent rendering artifacts
+    this.ctx.clearRect(
+        x*cellWidth, // X
+        y*cellHeight, // Y
+        cellWidth, // width
+        cellHeight //height
+      );
 
     this.ctx.fillStyle = color;
     this.ctx.fillRect(
@@ -30,6 +35,16 @@ TRAKE = {
         cellWidth - border, // width
         cellHeight - border //height
       );
+
+    if (hollow) {
+      this.ctx.fillStyle = this.grid.color;
+      this.ctx.fillRect(
+          x*cellWidth + (border*1.5), // X
+          y*cellHeight + (border*1.5), // Y
+          cellWidth - border*3, // width
+          cellHeight - border*3 //height
+        );
+    }
   },
 
   makeGrid: function() {
@@ -43,21 +58,81 @@ TRAKE = {
     }
   },
 
-  updateGrid: function(gridJSON) {
+  updateFood: function(food) {
+    this.setCell(food.x, food.y, this.grid.foodColor);
+  },
 
+  makePlayers: function(players) {
+    var self = this;
+
+    players.map(function(player) {
+      var id = player.id;
+      console.log(player);
+
+      self.players[id] = player;
+      self.players[id].tail = [player.position];
+      self.setCell(player.position.x, player.position.y, player.color);
+    });
+  },
+
+  updatePlayers: function(players) {
+    var self = this;
+
+    players.map(function(player) {
+      var p = self.players[player.id],
+          tailDiff;
+
+      // Convert head tile to a tail tile
+      self.setCell(p.position.x, p.position.y, p.color, true);
+
+      // Copy over new state data
+      for (field in player) {
+        p[field] = player[field]
+      };
+
+      // Move trake
+      p.tail.push(p.position);
+      self.setCell(p.position.x, p.position.y, p.color);
+
+      // Remove tail segments beyond tail length
+      if (p.tail_length < p.tail.length) {
+        tailDiff = p.tail.length - p.tail_length;
+
+        p.tail.slice(0,tailDiff).map(function(emptyCell) {
+          self.setCell(emptyCell.x, emptyCell.y, self.grid.color);
+        });
+
+        p.tail = p.tail.slice(tailDiff);
+      }
+    });
+  },
+
+  initialTick: function(jsonData) {
+    var self = this;
+
+    // Init grid
+    self.grid.rows = jsonData.dimensions.rows;
+    self.grid.cols = jsonData.dimensions.cols;
+    self.makeGrid();
+    jsonData.walls.map(function(wall) {
+      self.setCell(wall.x, wall.y, self.grid.wallColor);
+    });
+
+    // Update Game
+    self.updateFood(jsonData.food);
+    self.makePlayers(jsonData.players);
+  },
+
+  updateTick: function(jsonData) {
+    this.updateFood(jsonData.food);
+    this.updatePlayers(jsonData.players);
   },
 
   init: function() {
     this.ctx = document.querySelector('canvas').getContext('2d');
-    this.makeGrid();
   }
 
 }
-
-
-
-TRAKE.init();
-
 
 
 var tick0 = {
@@ -73,8 +148,8 @@ var tick0 = {
     y: 3
   },
   dimensions: {
-    rows: 100,
-    cols: 100
+    rows: 20,
+    cols: 20
   },
   players: [
     {
@@ -120,7 +195,7 @@ var tick1 = {
       score: 2,
       position: {
         x: 10,
-        y: 11
+        y: 9
       }
     },
     {
@@ -130,6 +205,156 @@ var tick1 = {
       score: 0,
       position: {
         x: 11,
+        y: 18
+      }
+    }
+  ]
+}
+
+var tick2 = {
+  type: "Update",
+  food: {
+    x: 3,
+    y: 3
+  },
+  players: [
+    {
+      id: 0,
+      direction: "Up",
+      tail_length: 5,
+      score: 2,
+      position: {
+        x: 10,
+        y: 8
+      }
+    },
+    {
+      id: 1,
+      direction: "Left",
+      tail_length: 5,
+      score: 0,
+      position: {
+        x: 10,
+        y: 18
+      }
+    }
+  ]
+}
+
+var tick3 = {
+  type: "Update",
+  food: {
+    x: 3,
+    y: 3
+  },
+  players: [
+    {
+      id: 0,
+      direction: "Up",
+      tail_length: 5,
+      score: 2,
+      position: {
+        x: 10,
+        y: 7
+      }
+    },
+    {
+      id: 1,
+      direction: "Left",
+      tail_length: 5,
+      score: 0,
+      position: {
+        x: 9,
+        y: 18
+      }
+    }
+  ]
+}
+
+var tick4 = {
+  type: "Update",
+  food: {
+    x: 3,
+    y: 3
+  },
+  players: [
+    {
+      id: 0,
+      direction: "Up",
+      tail_length: 5,
+      score: 2,
+      position: {
+        x: 10,
+        y: 6
+      }
+    },
+    {
+      id: 1,
+      direction: "Left",
+      tail_length: 5,
+      score: 0,
+      position: {
+        x: 8,
+        y: 18
+      }
+    }
+  ]
+}
+
+var tick5 = {
+  type: "Update",
+  food: {
+    x: 3,
+    y: 3
+  },
+  players: [
+    {
+      id: 0,
+      direction: "Up",
+      tail_length: 5,
+      score: 2,
+      position: {
+        x: 10,
+        y: 5
+      }
+    },
+    {
+      id: 1,
+      direction: "Left",
+      tail_length: 5,
+      score: 0,
+      position: {
+        x: 7,
+        y: 18
+      }
+    }
+  ]
+}
+
+var tick6 = {
+  type: "Update",
+  food: {
+    x: 3,
+    y: 3
+  },
+  players: [
+    {
+      id: 0,
+      direction: "Up",
+      tail_length: 5,
+      score: 2,
+      position: {
+        x: 10,
+        y: 4
+      }
+    },
+    {
+      id: 1,
+      direction: "Left",
+      tail_length: 5,
+      score: 0,
+      position: {
+        x: 6,
         y: 18
       }
     }
@@ -175,3 +400,14 @@ var tickN = {
 // Client: {id: 0, direction: "Up"}
 // Server: Tick2
 // ...
+
+
+
+TRAKE.init();
+TRAKE.initialTick(tick0);
+window.setTimeout(function(){TRAKE.updateTick(tick1)},1000);
+window.setTimeout(function(){TRAKE.updateTick(tick2)},2000);
+window.setTimeout(function(){TRAKE.updateTick(tick3)},3000);
+window.setTimeout(function(){TRAKE.updateTick(tick4)},4000);
+window.setTimeout(function(){TRAKE.updateTick(tick5)},5000);
+window.setTimeout(function(){TRAKE.updateTick(tick6)},6000);
