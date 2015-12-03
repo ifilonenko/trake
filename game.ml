@@ -130,7 +130,7 @@ and receive_frame s id content =
 
 (* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
 and send_all_players s msg =
-  List.iter (fun x -> send s (Player.id x) msg) (Grid.players s.grid)
+  List.iter (fun x -> let _ = message s (Player.id x) msg in ()) (Grid.players s.grid)
 
 (* starts this server *)
 let start s =

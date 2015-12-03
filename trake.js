@@ -412,7 +412,7 @@ client.onerror = function() {
 
 client.onopen = function() {
     console.log('WebSocket Client Connected');
-    client.send(JSON.stringify("hello!"));
+    client.send(JSON.stringify({type: "join", player_name: "client"}));
 };
 
 client.onclose = function() {
