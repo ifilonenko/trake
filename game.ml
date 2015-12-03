@@ -96,6 +96,10 @@ let rec tick s () =
 
   let rls = rules s in
   let g = grid s in
+
+  (* Move AI players *)
+  List.iter (fun p -> if (Player.is_ai p) then Ai.new_direction p s.grid) (Grid.players s.grid);
+
   (* Move all players in their direction *)
   Grid.act g;
 
