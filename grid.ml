@@ -131,7 +131,7 @@ let players g =
 
 let to_json_update g =
   let l = [
-    ("players", `List (List.map Player.to_json_initial (players g)))
+    ("players", `List (List.map Player.to_json_update (players g)))
   ] in
 
   let l = match (g.food) with
@@ -143,12 +143,18 @@ let to_json_update g =
 
 let to_json_initial g =
   let (cols, rows) = dimensions g in
-  match to_json_update g with
-  | `Assoc x -> `Assoc ([
+  let l = [
+    ("players", `List (List.map Player.to_json_initial (players g)));
     ("walls", `List (List.map (fun (z, _) -> Util.json_of_cell z) g.walls));
     ("dimensions", `Assoc [("rows", `Int rows); ("cols", `Int cols)])
-  ] @ x)
-  | _ -> `Null
+  ] in
+
+  let l = match (g.food) with
+  | Some x -> ("food", Util.json_of_cell x)::l
+  | None -> l
+  in
+
+  `Assoc l
 
 let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
