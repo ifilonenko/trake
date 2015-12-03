@@ -151,7 +151,19 @@ and receive_frame s id content =
 
 (* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
 and send_all_players s msg =
-  List.iter (fun x -> let _ = message s (Player.id x) msg in ()) (Grid.players s.grid)
+  let (f, t) =
+  match msg with
+  | Initial -> (Grid.to_json_initial, "initial")
+  | Update -> (Grid.to_json_update, "update")
+  | _ -> failwith "Cant send all players that message"
+  in
+
+  let js = Yojson.Basic.Util.to_string (match f s.grid with
+  | `Assoc x -> `Assoc (("type", `String t)::x)
+  | x -> x)
+  in
+
+  List.iter (fun x -> let _ = send s (Player.id x) js in ()) (Grid.players s.grid)
 
 (* starts this server *)
 let start s =
