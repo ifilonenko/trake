@@ -88,7 +88,8 @@ let to_json_update p =
     ("direction", `String (Util.string_of_direction (direction p)));
     ("tail_length", `Int (tail_length p));
     ("score", `Int 0);
-    ("position", Util.json_of_cell (position p))
+    ("position", Util.json_of_cell (position p));
+    ("alive", `Bool (is_alive p))
   ]
 
 let to_json_initial p =
