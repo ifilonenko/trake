@@ -56,6 +56,10 @@ let rules s =
 let add_handler s id handler =
   s.callbacks <- (id, handler)::s.callbacks
 
+let pong s id =
+  let handler = List.assoc id s.callbacks in
+  handler (Frame.create ~opcode:Frame.Opcode.Pong ())
+
 let send s id content =
   let handler = List.assoc id s.callbacks in
   handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
@@ -63,14 +67,17 @@ let send s id content =
 (* Turns json into msg *)
 let parse msg =
   let open Yojson.Basic.Util in
-  match msg with
-  | `Assoc _ -> (
-    let t = msg |> member "type" in
-    match t with
-    | `String "turn" -> Turn (Util.direction_of_string (msg |> member "direction" |> to_string))
-    | `String "join" -> Join (msg |> member "player_name" |> to_string)
-    | _ -> Unknown
-    )
+  try
+    (match msg with
+    | `Assoc _ -> (
+      let t = msg |> member "type" in
+      match t with
+      | `String "turn" -> Turn (Util.direction_of_string (msg |> member "direction" |> to_string))
+      | `String "join" -> Join (msg |> member "player_name" |> to_string)
+      | _ -> Unknown
+      )
+    | _ -> Unknown)
+  with
   | _ -> Unknown
 
 (* Serializes and sends a msg tuple to the client with id *)
@@ -111,14 +118,16 @@ and receive_frame s id content =
       let input = parse content in
       match input with
       | Turn d ->
+        print_endline (Util.string_of_direction d);
+
         let p = Grid.player_with_id (grid s) id in
-
         (match p with
-        | Some x -> Player.update_direction x d;
-        | _ -> ());
+        | Some x -> Player.update_direction x d; message s id (Confirm s.started)
+        | _ -> message s id (Confirm false))
 
-        return ()
       | Join name ->
+        print_endline name;
+
         s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
         message s id (Confirm s.started)
       | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
