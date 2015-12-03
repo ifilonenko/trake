@@ -106,9 +106,8 @@ let rec tick s () =
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
     let open Yojson.Basic.Util in
-    let _ = (match content with
+    match content with
     | `Assoc _ -> (
-      print_endline (Yojson.Basic.Util.to_string content);
       let input = parse content in
       match input with
       | Turn d ->
@@ -125,8 +124,6 @@ and receive_frame s id content =
       | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
       )
     | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
-    ) in
-    ()
 
 (* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
 and send_all_players s msg =
@@ -152,8 +149,7 @@ let start s =
 
       match frame.opcode with
       | Opcode.Ping -> send (Frame.create ~opcode:Opcode.Pong ()) >>= response
-      | Opcode.Text ->  print_endline frame.content; receive_frame s id (Yojson.Basic.from_string frame.content);
-                        return () >>= response
+      | Opcode.Text ->  receive_frame s id (Yojson.Basic.from_string frame.content) >>= response
       | Opcode.Close -> (* TODO: kill this player *) send (Frame.close 1000)
       | _ -> send (Frame.close 1002)
     in
