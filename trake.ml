@@ -6,3 +6,6 @@
 let g = Grid.create (100,100)
 let s = Game.create "0.0.0.0" 3110 g Game.{ trail_length = 5; ticks_per_second = 60.; food_probability = 0.2; }
 let () = Game.start s
+
+let () = Server.serve "./" "0.0.0.0" 8080
+let _ = Lwt_main.run (Game.tick s ())

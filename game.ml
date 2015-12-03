@@ -54,13 +54,13 @@ let rules s =
 let receive_frame s player_id content =
   ()
 
-(* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
-let update_players s =
-  ()
-
 let send s id content =
   let handler = List.assoc !s.callbacks id in
   handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
+
+(* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
+let update_players s =
+  ()
 
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
@@ -76,8 +76,6 @@ let rec tick s () =
 
   (* Send players new board *)
   let () = update_players s in
-
-  print_endline "did tick";
 
   return ()
   (* Tick again *)
@@ -109,9 +107,7 @@ let start s =
   in
 
   (* start our server locally on port 3110 *)
-  let uri = Uri.make ~scheme:"http" ~host:(host s) ~port:(port s) () in
+  let uri = Uri.make ~scheme:"http" ~host:(host s) ~port:(port s) ~path:"websocket" () in
   let _ = serve uri handler in
 
-  (* Keep the runloop alive *)
-  (* TODO: Remove this after we add the webservice, or itll block *)
-  Lwt_main.run (tick s ())
+  ()

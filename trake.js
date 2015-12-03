@@ -401,7 +401,28 @@ var tickN = {
 // Server: Tick2
 // ...
 
+var SERVER_URL = "ws://" + location.hostname + ":3110/websocket";
 
+
+var client = new WebSocket(SERVER_URL);
+
+client.onerror = function() {
+    console.log('Connection Error');
+};
+
+client.onopen = function() {
+    console.log('WebSocket Client Connected');
+};
+
+client.onclose = function() {
+    console.log('echo-protocol Client Closed');
+};
+
+client.onmessage = function(e) {
+    if (typeof e.data === 'string') {
+        console.log("Received: '" + e.data + "'");
+    }
+};
 
 TRAKE.init();
 TRAKE.initialTick(tick0);
