@@ -3,7 +3,7 @@ open Assertions
 let grid = Grid.create (3,3)
 
 let g = Grid.create (3,5)
-let p = (Player.create_ai 1 1 (0,0,0) "AI")
+let p = (Player.create_ai 0 (0,0,0))
 let rec print_int_list (input_list: int list) : unit =
   match input_list with
   | [] -> ()
