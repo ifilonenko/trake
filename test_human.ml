@@ -559,6 +559,10 @@ TEST_UNIT = Player.tail fourth_player === [(10, 2); (9, 2); (8, 2); (7, 2); (6, 
 let () = Grid.act new_grid
 TEST_UNIT = Player.position fourth_player === (10, 4)
 TEST_UNIT = Player.tail fourth_player === [(10, 3); (10, 2); (9, 2); (8, 2); (7, 2); (6, 2); (5, 2); (4, 2); (3, 2); (2, 2)]
+TEST_UNIT = Player.occupies_cell fourth_player (9, 2) === true
+TEST_UNIT = Player.occupies_cell fourth_player (10, 5) === false
+TEST_UNIT = Player.occupies_cell fourth_player (10, 4) === true
+TEST_UNIT = Player.occupies_cell fourth_player (49, 49) === false
 let () = Player.update_position fourth_player (48, 48)
 let () = Grid.act new_grid
 TEST_UNIT = Player.position fourth_player === (48, 49)
