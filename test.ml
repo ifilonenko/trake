@@ -2,7 +2,7 @@ open Assertions
 
 let grid = Grid.create (3,3)
 
-let g = Grid.create (3,5)
+let g = Grid.create (3,10)
 let p = (Player.create_ai 0 (0,0,0))
 let rec print_int_list (input_list: int list) : unit =
   match input_list with
@@ -20,10 +20,12 @@ TEST_UNIT = Grid.status_of_cell grid (2, 2) === Util.Wall
 TEST_UNIT = Grid.status_of_cell grid (0, 1) === Util.Wall
 TEST_UNIT = Grid.status_of_cell grid (2, 1) === Util.Wall
 TEST_UNIT = Grid.status_of_cell grid (1, 1) === Util.Empty
-TEST_UNIT = Ai.distance_list p g === [3;1;1;1]
+TEST_UNIT = Ai.distance_list p g === [8;1;1;1]
+let new_grid = Grid.add_player grid p
 let () = Ai.new_direction p g
 TEST_UNIT = Player.direction p === Util.Up
-
+let () = print_string "here"
+let () = Ai.new_direction  p new_grid
 
 let new_grid = Grid.create (20, 20)
 TEST_UNIT = Grid.dimensions new_grid === (20, 20)

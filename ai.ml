@@ -96,11 +96,22 @@ let rec sum_equal_lists l1 l2 =
   | (a::b,c::d) -> (a+c)::(sum_equal_lists b d)
   | _ -> []
 
+let rec print_int_list (input_list: int list) : unit =
+  match input_list with
+  | [] -> ()
+  | h::t ->
+    print_int h;print_string "\n";print_int_list t
+
 let new_direction p g =
   let distances = distance_list p g in
+  let () = print_int_list distances in
+  let () = print_string "hello\n" in
   let potential_field_hash = Pfield.create g in
+  let () = print_string "successful" in
   let potential_values = Pfield.direction_potentials p g potential_field_hash in
+  let () = print_int_list potential_values in
   let maximums = sum_equal_lists distances potential_values in
+  let () = print_int_list maximums in
   (* Need to add shortest_distance to food value.... *)
   let directions = [Util.Up;Util.Down;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes maximums 0 (max_val maximums)) in

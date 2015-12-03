@@ -61,11 +61,16 @@ let create g =
     done;
     print_int (!x);print_string ", ";print_int (!y);print_string "\n";y:=(!y)+1;Hashtbl.add hash (!x,!y) [(-1,0)];x:=0;
   done;
+  let () = print_string "created\n" in
   let players = Grid.players g in
-  let () = List.nth (
-    List.map (fun p -> add_potentials_to_hash p hash) players
-  ) 0 in
-  hash
+  let () = print_int (List.length players);print_string "\n" in
+  if (List.length players > 0)
+  then
+    let () = List.nth (
+      List.map (fun p -> add_potentials_to_hash p hash) players
+    ) 0 in
+    hash
+  else hash
 let rec sum_non_player_pots sum pid plist =
     match plist with
     | [] -> sum

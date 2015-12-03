@@ -33,13 +33,12 @@ val check_and_add_if_true : ('a, ('b * 'c) list) Hashtbl.t -> 'a -> 'b -> 'c -> 
 (* This function adds potentials to the hash given a player *)
 val add_potentials_to_hash : Player.t -> (int * int, (int * int) list) Hashtbl.t -> unit
 
-
 (* This function creates a pfield hash *)
 val create : Grid.t -> (int * int, (int * int) list) Hashtbl.t
 
-
 (* Helper function to sum up potentials that dont belong to the payer *)
 val sum_non_player_pots : int -> int -> (int * int) list -> int
+
 (* This sums up the potentials and will tell a person a list of
    potentials in a list in the order Up | Down | Left | Right *)
 val direction_potentials : Player.t -> 'a -> (int * int, (int * int) list) Hashtbl.t -> int list

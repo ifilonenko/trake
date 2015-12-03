@@ -3,7 +3,8 @@
  * the best direction to go in response to the givens.
  *)
 (* Implement a queue for DFS *)
-module Queue :                                                                    sig                                                                               type 'a t = ('a list * 'a list) ref
+module Queue :
+  sig type 'a t = ('a list * 'a list) ref
   exception Empty
   val create : unit -> ('a list * 'b list) ref
   val enqueue : 'a -> ('a list * 'b) ref -> unit
@@ -23,6 +24,12 @@ val direction_list : int list -> 'a list -> 'a list
 (* Generate a list of distances to see how far the dangers are from the AI
    in the order of Up | Down | Left | Right *)
 val distance_list : Player.t -> Grid.t -> int list
+
+(* Sum two lists together with same number of elements *)
+val sum_equal_lists : int list -> int list -> int list
+
+(* Print helper *)
+val print_int_list : int list -> unit
 
 (* returns a direction that the AI should move based on various computations *)
 val new_direction: Player.t -> Grid.t -> unit
