@@ -61,8 +61,12 @@ let pong s id =
   handler (Frame.create ~opcode:Frame.Opcode.Pong ())
 
 let send s id content =
-  let handler = List.assoc id s.callbacks in
-  handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
+  try
+    let handler = List.assoc id s.callbacks in
+    handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
+  with
+  | _ -> return ()
+
 
 (* Turns json into msg *)
 let parse msg =
@@ -124,7 +128,7 @@ and start_ticking s () =
 
   let () = send_all_players s Initial in
 
-  tick s ()
+  return () >>= tick s
 
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
@@ -143,7 +147,7 @@ and receive_frame s id content =
         (
           (* start game in 10 seconds after first player joins *)
           if List.length (Grid.players s.grid) = 0 then
-            let _ = Lwt_unix.sleep 10. >>= (start_ticking s) in
+            let _ = Lwt_unix.sleep 1. >>= (start_ticking s) in
             ()
           );
 
@@ -162,12 +166,17 @@ and send_all_players s msg =
   | _ -> failwith "Cant send all players that message"
   in
 
-  let js = Yojson.Basic.Util.to_string (match f s.grid with
-  | `Assoc x -> `Assoc (("type", `String t)::x)
-  | x -> x)
-  in
+  try
+    let js = Yojson.Basic.to_string (match f s.grid with
+    | `Assoc x -> `Assoc (("type", `String t)::x)
+    | x -> x)
+    in
 
-  List.iter (fun x -> let _ = send s (Player.id x) js in ()) (Grid.players s.grid)
+    List.iter (fun x -> let _ = send s (Player.id x) js in ()) (Grid.players s.grid)
+
+  with
+  | _ -> print_endline "failed to create grid json"
+
 
 (* starts this server *)
 let start s =
