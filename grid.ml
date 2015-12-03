@@ -126,13 +126,31 @@ let rec add_player g p =
 let dimensions g =
   g.dimensions
 
-let to_json_initial g =
-  failwith "Unimplemented"
+let players g =
+  g.players
 
 let to_json_update g =
-  failwith "Unimplemented"
+  let l = [
+    ("players", `List (List.map Player.to_json_initial (players g)))
+  ] in
 
-let spawn_food g =
+  let l = match (g.food) with
+  | Some x -> ("food", Util.json_of_cell x)::l
+  | None -> l
+  in
+
+  `Assoc l
+
+let to_json_initial g =
+  let (cols, rows) = dimensions g in
+  match to_json_update g with
+  | `Assoc x -> `Assoc ([
+    ("walls", `List (List.map (fun (z, _) -> Util.json_of_cell z) g.walls));
+    ("dimensions", `Assoc [("rows", `Int rows); ("cols", `Int cols)])
+  ] @ x)
+  | _ -> `Null
+
+let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
   let () = Random.self_init() in
   let x = Random.int (fst g.dimensions) in
