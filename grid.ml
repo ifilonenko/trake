@@ -2,7 +2,7 @@ exception Invalid_Grid
 
 type t = {
     walls: (Util.cell * Util.cell_status) list;
-    food: Util.cell option;
+    mutable food: Util.cell option;
     dimensions: int * int;
     players: Player.t list;
 }
@@ -137,7 +137,7 @@ let spawn_food g =
   let () = Random.self_init() in
   let x = Random.int (fst g.dimensions) in
   let y = Random.int (snd g.dimensions) in
-  if (status_of_cell g (x, y) = Empty) then g.food = Some (x, y) else ()
+  if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) else ()
 
 let players g =
   g.players
@@ -154,7 +154,7 @@ let prune_player g player =
   let status = status_of_cell g pos in
   match status with
   | Util.Empty -> () (* all good, player can move here *)
-  | Util.Food -> Player.eat_food player
+  | Util.Food -> Player.eat_food player; g.food <- None
   | _ -> Player.kill player
 
 let act g =
