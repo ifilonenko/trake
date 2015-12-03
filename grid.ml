@@ -134,7 +134,10 @@ let to_json_update g =
 
 let spawn_food g =
   (* Choose a random empty location to spawn food into *)
-  ()
+  let () = Random.self_init() in
+  let x = Random.int (fst g.dimensions) in
+  let y = Random.int (snd g.dimensions) in
+  if (status_of_cell g (x, y) = Empty) then g.food = Some (x, y) else ()
 
 let players g =
   g.players
