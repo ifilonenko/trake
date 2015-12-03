@@ -6,8 +6,8 @@ type t
 (* creates a human player given an id, trail length, a color and a label *)
 val create_human: int -> int -> color -> string -> t
 
-(* create_ai id clr will create an AI player with the given color and label *)
-val create_ai: int -> int -> color -> string -> t
+(* create_ai clr will create an AI player with the given color and label *)
+val create_ai: int -> color -> t
 
 val id: t -> int
 
@@ -45,7 +45,8 @@ val color: t -> color
      position: [ int, int ]
      tail: [ [int, int], [int, int], ...]
   } *)
-val to_json: t -> Yojson.Basic.json
+val to_json_initial: t -> Yojson.Basic.json
+val to_json_update: t -> Yojson.Basic.json
 
 val tail_length: t -> int
 val eat_food: t -> unit
@@ -55,6 +56,6 @@ val tail: t -> (int * int) list
 (* Determines if the player occupies the given cell *)
 val occupies_cell: t -> int * int -> bool
 
-(* Calculates the new position and updates the player to advance to that 
+(* Calculates the new position and updates the player to advance to that
  * new position and it readjusts the tail *)
 val advance: t -> unit

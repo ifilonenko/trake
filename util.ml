@@ -30,3 +30,6 @@ let string_of_direction d =
   | Down -> "Down"
   | Left -> "Left"
   | Right -> "Right"
+
+let json_of_cell (x, y) =
+  `Assoc [("x", `Int x); ("y", `Int y)]

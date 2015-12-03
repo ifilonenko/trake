@@ -93,6 +93,7 @@ let message s id msg =
 
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
+
   let rls = rules s in
   let g = grid s in
   (* Move all players in their direction *)
@@ -107,8 +108,19 @@ let rec tick s () =
   let () = send_all_players s Update in
 
   return ()
+
   (* Tick again *)
   >>= (tick s)
+
+and start_ticking s () =
+  (* create phantom AI players *)
+  (while List.length (Grid.players s.grid) < 4 do
+    s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
+  done);
+
+  let () = send_all_players s Initial in
+
+  tick s ()
 
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
@@ -118,15 +130,18 @@ and receive_frame s id content =
       let input = parse content in
       match input with
       | Turn d ->
-        print_endline (Util.string_of_direction d);
-
         let p = Grid.player_with_id (grid s) id in
         (match p with
         | Some x -> Player.update_direction x d; message s id (Confirm s.started)
         | _ -> message s id (Confirm false))
 
       | Join name ->
-        print_endline name;
+        (
+          (* start game in 10 seconds after first player joins *)
+          if List.length (Grid.players s.grid) = 0 then
+            let _ = Lwt_unix.sleep 10. >>= (start_ticking s) in
+            ()
+          );
 
         s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
         message s id (Confirm s.started)
@@ -158,8 +173,15 @@ let start s =
 
       match frame.opcode with
       | Opcode.Ping -> send (Frame.create ~opcode:Opcode.Pong ()) >>= response
-      | Opcode.Text ->  receive_frame s id (Yojson.Basic.from_string frame.content) >>= response
-      | Opcode.Close -> (* TODO: kill this player *) send (Frame.close 1000)
+      | Opcode.Text -> receive_frame s id (Yojson.Basic.from_string frame.content) >>= response
+      | Opcode.Close ->
+        let p = Grid.player_with_id s.grid id in
+
+        (match p with
+        | Some x -> Player.kill x
+        | _ -> ());
+
+        send (Frame.close 1000)
       | _ -> send (Frame.close 1002)
     in
     response ()
