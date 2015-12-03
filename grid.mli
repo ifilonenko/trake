@@ -42,6 +42,9 @@ val spawn_food: t -> unit
 (* All the players in this game *)
 val players: t -> Player.t list
 
+(* Returns Some x, where x is the player in this game with the given id, None if not found *)
+val player_with_id: t -> int -> Player.t option
+
 (* Determines what should happen to the player based on the player's current position *)
 val prune_player: t -> Player.t -> unit
 

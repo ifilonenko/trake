@@ -2,6 +2,8 @@ open Websocket_lwt
 open Lwt
 open Conduit_lwt_unix
 
+type msg = Initial | Update | Join of string | Turn of Util.direction | End | Confirm of bool | Unknown
+
 type rules = {
   trail_length: int;
   ticks_per_second: float;
@@ -10,7 +12,7 @@ type rules = {
 
 type t = {
   rules: rules;
-  grid: Grid.t;
+  mutable grid: Grid.t;
   mutable callbacks: (int * (Frame.t -> unit Lwt.t)) list;
   host: string;
   port: int;
@@ -51,16 +53,36 @@ let grid s =
 let rules s =
   s.rules
 
-let receive_frame s player_id content =
-  ()
+let add_handler s id handler =
+  s.callbacks <- (id, handler)::s.callbacks
 
 let send s id content =
-  let handler = List.assoc !s.callbacks id in
+  let handler = List.assoc id s.callbacks in
   handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
 
-(* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
-let update_players s =
-  ()
+(* Turns json into msg *)
+let parse msg =
+  let open Yojson.Basic.Util in
+  match msg with
+  | `Assoc _ -> (
+    let t = msg |> member "type" in
+    match t with
+    | `String "turn" -> Turn (Util.direction_of_string (msg |> member "direction" |> to_string))
+    | `String "join" -> Join (msg |> member "player_name" |> to_string)
+    | _ -> Unknown
+    )
+  | _ -> Unknown
+
+(* Serializes and sends a msg tuple to the client with id *)
+let message s id msg =
+  let json = match msg with
+  | Initial -> `String "Hi!"
+  | Update -> `String "Hi!"
+  | End -> `Assoc [("type", `String "end")]
+  | Confirm a -> `Assoc [("type", `String "confirm"); ("accepted", `Bool a); ("id", `Int id)]
+  | _ -> failwith "Invalid Message to send"
+  in
+  send s id (Yojson.Basic.to_string json)
 
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
@@ -75,11 +97,40 @@ let rec tick s () =
   );
 
   (* Send players new board *)
-  let () = update_players s in
+  let () = send_all_players s Update in
 
   return ()
   (* Tick again *)
   >>= (tick s)
+
+(* Handles incoming communication from clients *)
+and receive_frame s id content =
+    let open Yojson.Basic.Util in
+    let _ = (match content with
+    | `Assoc _ -> (
+      print_endline (Yojson.Basic.Util.to_string content);
+      let input = parse content in
+      match input with
+      | Turn d ->
+        let p = Grid.player_with_id (grid s) id in
+
+        (match p with
+        | Some x -> Player.update_direction x d;
+        | _ -> ());
+
+        return ()
+      | Join name ->
+        s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
+        message s id (Confirm s.started)
+      | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
+      )
+    | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
+    ) in
+    ()
+
+(* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
+and send_all_players s msg =
+  List.iter (fun x -> send s (Player.id x) msg) (Grid.players s.grid)
 
 (* starts this server *)
 let start s =
@@ -93,14 +144,17 @@ let start s =
   (* Handles communication between client/server *)
   let handler id req recv send =
     let open Frame in
+    (* keep a reference to the send function for this player *)
+    let () = add_handler s id send in
 
     let rec response () =
       recv () >>= fun frame ->
+
       match frame.opcode with
       | Opcode.Ping -> send (Frame.create ~opcode:Opcode.Pong ()) >>= response
-      | Opcode.Text ->  receive_frame s id (Yojson.Basic.from_string frame.content);
+      | Opcode.Text ->  print_endline frame.content; receive_frame s id (Yojson.Basic.from_string frame.content);
                         return () >>= response
-      | Opcode.Close -> send (Frame.close 1000)
+      | Opcode.Close -> (* TODO: kill this player *) send (Frame.close 1000)
       | _ -> send (Frame.close 1002)
     in
     response ()
@@ -108,6 +162,4 @@ let start s =
 
   (* start our server locally on port 3110 *)
   let uri = Uri.make ~scheme:"http" ~host:(host s) ~port:(port s) ~path:"websocket" () in
-  let _ = serve uri handler in
-
-  ()
+  serve uri handler

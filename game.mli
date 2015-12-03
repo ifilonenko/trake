@@ -20,7 +20,7 @@ val port: t -> int
 val host: t -> string
 
 (* starts this server *)
-val start: t -> unit 
+val start: t -> unit Lwt.t
 
 (* Grid this game is being evaluated on *)
 val grid: t -> Grid.t

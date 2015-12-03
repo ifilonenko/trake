@@ -20,3 +20,6 @@ val add_cells: int * int -> int * int -> int * int
 
 (* Returns the vector direction of the direction given *)
 val vector_of_direction: direction -> int * int
+
+val direction_of_string: string -> direction
+val string_of_direction: direction -> string

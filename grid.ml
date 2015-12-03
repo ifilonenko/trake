@@ -136,8 +136,14 @@ let spawn_food g =
 let players g =
   g.players
 
+let player_with_id g id =
+  try
+    Some (List.find (fun x -> Player.id x = id) (players g))
+  with
+  | _ -> None
+
 let prune_player g player =
-  let pos = Util.add_cells (Player.position player) 
+  let pos = Util.add_cells (Player.position player)
             (Util.vector_of_direction (Player.direction player)) in
   let status = status_of_cell g pos in
   match status with
@@ -151,4 +157,3 @@ let act g =
 
   (* Advance all players *)
   List.iter Player.advance (players g);
-
