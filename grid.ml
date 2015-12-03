@@ -131,7 +131,7 @@ let players g =
 
 let to_json_update g =
   let l = [
-    ("players", `List (List.map Player.to_json_initial (players g)))
+    ("players", `List (List.map Player.to_json_update (players g)))
   ] in
 
   let l = match (g.food) with
@@ -143,19 +143,28 @@ let to_json_update g =
 
 let to_json_initial g =
   let (cols, rows) = dimensions g in
-  match to_json_update g with
-  | `Assoc x -> `Assoc ([
+  let l = [
+    ("players", `List (List.map Player.to_json_initial (players g)));
     ("walls", `List (List.map (fun (z, _) -> Util.json_of_cell z) g.walls));
     ("dimensions", `Assoc [("rows", `Int rows); ("cols", `Int cols)])
-  ] @ x)
-  | _ -> `Null
+  ] in
+
+  let l = match (g.food) with
+  | Some x -> ("food", Util.json_of_cell x)::l
+  | None -> l
+  in
+
+  `Assoc l
 
 let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
-  let () = Random.self_init() in
-  let x = Random.int (fst g.dimensions) in
-  let y = Random.int (snd g.dimensions) in
-  if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) else ()
+  if g.food = None then
+  (
+    let () = Random.self_init() in
+    let x = Random.int (fst g.dimensions) in
+    let y = Random.int (snd g.dimensions) in
+    if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) else ()
+    )
 
 let players g =
   g.players
@@ -180,4 +189,4 @@ let act g =
   List.iter (prune_player g) (players g);
 
   (* Advance all players *)
-  List.iter Player.advance (players g);
+  List.iter (fun p -> if (Player.is_alive p) then Player.advance p else ()) (players g);

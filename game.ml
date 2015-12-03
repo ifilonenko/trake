@@ -87,13 +87,24 @@ let parse msg =
 (* Serializes and sends a msg tuple to the client with id *)
 let message s id msg =
   let json = match msg with
-  | Initial -> `String "Hi!"
-  | Update -> `String "Hi!"
+  | Initial
+  | Update ->
+    (
+      let (f, t) = if msg = Initial then
+        (Grid.to_json_initial, "initial")
+      else
+        (Grid.to_json_update, "update")
+      in
+
+      (match f s.grid with
+      | `Assoc x -> `Assoc (("type", `String t)::x)
+      | x -> x)
+      )
   | End -> `Assoc [("type", `String "end")]
   | Confirm a -> `Assoc [("type", `String "confirm"); ("accepted", `Bool a); ("id", `Int id)]
   | _ -> failwith "Invalid Message to send"
   in
-  send s id (Yojson.Basic.to_string json)
+  Yojson.Basic.to_string json
 
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
@@ -140,40 +151,32 @@ and receive_frame s id content =
       | Turn d ->
         let p = Grid.player_with_id (grid s) id in
         (match p with
-        | Some x -> Player.update_direction x d; message s id (Confirm s.started)
-        | _ -> message s id (Confirm false))
+        | Some x -> Player.update_direction x d; send s id (message s id (Confirm s.started))
+        | _ -> send s id (message s id (Confirm false)))
 
       | Join name ->
-        (
+        s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
+        let rtn = send s id (message s id (Confirm s.started)) in
+
+        let () = (
           (* start game in 10 seconds after first player joins *)
-          if List.length (Grid.players s.grid) = 0 then
+          if List.length (Grid.players s.grid) = 1 then
             let _ = Lwt_unix.sleep 1. >>= (start_ticking s) in
             ()
-          );
-
-        s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
-        message s id (Confirm s.started)
+          else
+            let _ = send s id (message s id Initial) in
+            ()
+          ) in
+        rtn
       | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
       )
     | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
 
 (* Sends JSON of game board to all humans and the Grid.t instance to AI users *)
 and send_all_players s msg =
-  let (f, t) =
-  match msg with
-  | Initial -> (Grid.to_json_initial, "initial")
-  | Update -> (Grid.to_json_update, "update")
-  | _ -> failwith "Cant send all players that message"
-  in
-
   try
-    let js = Yojson.Basic.to_string (match f s.grid with
-    | `Assoc x -> `Assoc (("type", `String t)::x)
-    | x -> x)
-    in
-
+    let js = message s (-1) msg in
     List.iter (fun x -> let _ = send s (Player.id x) js in ()) (Grid.players s.grid)
-
   with
   | _ -> print_endline "failed to create grid json"
 
