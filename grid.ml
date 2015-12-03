@@ -126,7 +126,10 @@ let rec add_player g p =
 let dimensions g =
   g.dimensions
 
-let to_json g =
+let to_json_initial g =
+  failwith "Unimplemented"
+
+let to_json_update g =
   failwith "Unimplemented"
 
 let spawn_food g =

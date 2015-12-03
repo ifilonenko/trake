@@ -25,10 +25,13 @@ let create_human id tl clr lbl =
     human = true;
   }
 
-let create_ai id tl clr lbl =
+let ai_count = ref (-1)
+
+let create_ai tl clr =
+  ai_count := !ai_count - 1;
   {
-    id = id;
-    label = lbl;
+    id = !ai_count;
+    label = Printf.sprintf "Robot %d" (-(!ai_count));
     color = clr;
     alive = true;
     direction = Util.Down;
@@ -69,17 +72,34 @@ let label p =
 let color p =
   p.color
 
-let to_json p =
-  failwith "Unimplemented"
-
 let tail_length p =
   p.tail_length
+
 
 let eat_food p =
   p.tail_length <- (tail_length p) + 1
 
 let position p =
   p.position
+
+let to_json_update p =
+  `Assoc [
+    ("id", `Int (id p));
+    ("direction", `String (Util.string_of_direction (direction p)));
+    ("tail_length", `Int (tail_length p));
+    ("score", `Int 0);
+    ("position", Util.json_of_cell (position p))
+  ]
+
+let to_json_initial p =
+  let (r, g, b) = color p in
+  match to_json_update p with
+  | `Assoc x -> `Assoc ([
+    ("label", `String (label p));
+    ("color", `String (Printf.sprintf "rgb(%i, %i, %i)" r g b));
+    ("human", `Bool (is_human p))
+  ] @ x)
+  | _ -> `Null
 
 let tail p =
   p.tail

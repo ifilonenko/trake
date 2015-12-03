@@ -34,7 +34,8 @@ val dimensions: t -> int * int
  *   dimensions: { width: int; height: int }
  *   players: dictionary of player info with the keys being their ID's and the cells they own
  *)
-val to_json: t -> Yojson.Basic.json
+val to_json_initial: t -> Yojson.Basic.json
+val to_json_update: t -> Yojson.Basic.json
 
 (* `spawn_food grid` will spawn food somewhere random and return where it spawned *)
 val spawn_food: t -> unit
