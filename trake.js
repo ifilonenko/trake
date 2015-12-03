@@ -59,7 +59,9 @@ TRAKE = {
   },
 
   updateFood: function(food) {
-    this.setCell(food.x, food.y, this.grid.foodColor);
+    if (typeof food !== "undefined") {
+      this.setCell(food.x, food.y, this.grid.foodColor);
+    }
   },
 
   makePlayers: function(players) {
@@ -79,8 +81,7 @@ TRAKE = {
     var self = this;
 
     players.map(function(player) {
-      var p = self.players[player.id],
-          tailDiff;
+      var p = self.players[player.id], tailDiff;
 
       // Convert head tile to a tail tile
       self.setCell(p.position.x, p.position.y, p.color, true);
@@ -412,9 +413,8 @@ client.onerror = function() {
 
 client.onopen = function() {
     console.log('WebSocket Client Connected');
+    TRAKE.init();
     client.send(JSON.stringify({type: "join", player_name: "client"}));
-    client.send(JSON.stringify({type: "turn", direction: "Left"}));
-
 };
 
 client.onclose = function() {
@@ -422,14 +422,22 @@ client.onclose = function() {
 };
 
 client.onmessage = function(e) {
-    console.log("Received: '" + e.data + "'");
+    // console.log("Received: '" + e.data + "'");
+    var data = JSON.parse(e.data);
+    console.log(data);
+
+    if (data.type === "initial") {
+      TRAKE.initialTick(data);
+
+    } else if (data.type === "update") {
+      TRAKE.updateTick(data);
+    }
 };
 
-TRAKE.init();
-TRAKE.initialTick(tick0);
-window.setTimeout(function(){TRAKE.updateTick(tick1)},1000);
-window.setTimeout(function(){TRAKE.updateTick(tick2)},2000);
-window.setTimeout(function(){TRAKE.updateTick(tick3)},3000);
-window.setTimeout(function(){TRAKE.updateTick(tick4)},4000);
-window.setTimeout(function(){TRAKE.updateTick(tick5)},5000);
-window.setTimeout(function(){TRAKE.updateTick(tick6)},6000);
+// TRAKE.initialTick(tick0);
+// window.setTimeout(function(){TRAKE.updateTick(tick1)},1000);
+// window.setTimeout(function(){TRAKE.updateTick(tick2)},2000);
+// window.setTimeout(function(){TRAKE.updateTick(tick3)},3000);
+// window.setTimeout(function(){TRAKE.updateTick(tick4)},4000);
+// window.setTimeout(function(){TRAKE.updateTick(tick5)},5000);
+// window.setTimeout(function(){TRAKE.updateTick(tick6)},6000);
