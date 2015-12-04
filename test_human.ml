@@ -1,27 +1,5 @@
 open Assertions
 
-(* let p = (Player.create_ai 1 1 (0,0,0) "AI")
-let rec print_int_list (input_list: int list) : unit =
-  match input_list with
-  | [] -> ()
-  | h::t ->
-    print_int h;print_string "\n";print_int_list t
-
-TEST_UNIT = Grid.dimensions grid === (3, 3)
-TEST_UNIT = Grid.status_of_cell grid (0, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (0, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (0, 1) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 1) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 1) === Util.Empty
-TEST_UNIT = Ai.distance_list p g === [1;1;1;1]
-TEST_UNIT = Player.direction p === Util.Down
-let () = Ai.new_direction p g
-TEST_UNIT = Player.direction p === Util.Up *)
-
 let grid = Grid.create (20,20)
 
 TEST_UNIT = Grid.dimensions grid === (20, 20)
@@ -568,6 +546,9 @@ let () = Grid.act new_grid
 TEST_UNIT = Player.position fourth_player === (48, 49)
 TEST_UNIT = Player.is_alive fourth_player === false
 TEST_UNIT = Player.tail fourth_player === []
+let () = Grid.act new_grid
+TEST_UNIT = Player.position fourth_player === (48, 49)
+TEST_UNIT = Player.position third_player === (9, 2)
 
 TEST_UNIT = Util.vector_of_direction (Util.Up) === (0, -1)
 TEST_UNIT = Util.vector_of_direction (Util.Down) === (0, 1)
