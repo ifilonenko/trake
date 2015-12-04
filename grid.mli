@@ -40,6 +40,8 @@ val to_json_update: t -> Yojson.Basic.json
 (* `spawn_food grid` will spawn food somewhere random and return where it spawned *)
 val spawn_food: t -> unit
 
+val get_walls: t -> (Util.cell * Util.cell_status) list
+
 (* All the players in this game *)
 val players: t -> Player.t list
 

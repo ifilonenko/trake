@@ -12,11 +12,11 @@ let from_json_file path =
 
 let create dims =
   let (w, h) = dims in
-  (* if (w < 20 || h < 20) then raise Invalid_Grid
-  else  *)
+  if (w < 20 || h < 20) then raise Invalid_Grid
+  else 
     let rec gen_vert x y =
       if y > 0 then
-        ((x, y), Util.Wall)::(gen_vert x (y - 1))
+          ((x, y), Util.Wall)::(gen_vert x (y - 1))
       else
         []
     in
@@ -30,8 +30,9 @@ let create dims =
   {
     players = [];
     food = None;
-    walls = (gen_vert 0 h) @ (gen_vert (w - 1) h) @ (gen_horiz w 0)
-              @ (gen_horiz w (h - 1)) @ [((0, 0), Util.Wall)];
+    walls = (gen_vert 0 (h - 1)) @ (gen_vert (w - 1) (h - 1)) @ 
+            (gen_horiz (w - 1) 0) @ (gen_horiz (w - 1) (h - 1)) @ 
+            [((0, 0), Util.Wall)]; 
     dimensions = dims;
   }
 
@@ -156,6 +157,9 @@ let to_json_initial g =
 
   `Assoc l
 
+let get_walls g = 
+  g.walls
+
 let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
   if g.food = None then
@@ -182,7 +186,7 @@ let prune_player g player =
   match status with
   | Util.Empty -> () (* all good, player can move here *)
   | Util.Food -> Player.eat_food player; g.food <- None
-  | _ -> Player.kill player
+  | _ -> let () = Player.advance player in Player.kill player
 
 let act g =
   (* Check if the cell they want to move into is occupied *)
