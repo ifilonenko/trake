@@ -40,8 +40,6 @@ let distance_list p g =
     let () = print_int ai_x;print_string ", ";print_int ai_y;print_string "\n" in
     let (pg_x,pg_y) = Grid.dimensions g in
     let (g_x, g_y) = (pg_x-1,pg_y-1) in
-    let () = print_int g_x;print_string ", ";print_int g_y;print_string "\n" in
-    let () = print_string "entering up\n" in
     let rec up_distance pos g =
       let curr = (ai_x,pos) in
       match Grid.status_of_cell g curr with
@@ -118,14 +116,11 @@ let do_djikstras_if_food_exists lst p g =
 
 let new_direction p g =
   let distances = distance_list p g in
-  let () = print_int_list distances in
   let potential_field_hash = Pfield.create g in
-  let () = print_string "successful\n" in
   let potential_values = Pfield.direction_potentials p g potential_field_hash in
-  let () = print_int_list potential_values in
   let maximums = sum_equal_lists distances potential_values in
-  let () = print_int_list maximums in
   let new_maximums = do_djikstras_if_food_exists maximums p g in
+  let () = print_int_list new_maximums in
   let directions = [Util.Up;Util.Down;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes new_maximums 0 (max_val new_maximums)) in
   let best_direction = List.nth (direction_list max_indexes directions) 0 in

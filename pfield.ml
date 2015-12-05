@@ -60,13 +60,11 @@ let create g =
   let (x,y) = (ref 0,ref 0) in
   while ((!y) <> (g_y+1)) do
     while ((!x) <> g_x) do
-      Hashtbl.add hash (!x,!y) [(-1,0)];print_int (!x);print_string ", ";print_int (!y);print_string "\n";x:=(!x)+1;
+      Hashtbl.add hash (!x,!y) [(-1000,0)];x:=(!x)+1;
     done;
-    print_int (!x);print_string ", ";print_int (!y);print_string "\n";y:=(!y)+1;Hashtbl.add hash (!x,!y) [(-1,0)];x:=0;
+    y:=(!y)+1;Hashtbl.add hash (!x,!y) [(-1000,0)];x:=0;
   done;
-  let () = print_string "created\n" in
   let players = Grid.players g in
-  let () = print_int (List.length players);print_string "\n" in
   if (List.length players > 0)
   then
     let () = List.nth (
@@ -74,6 +72,7 @@ let create g =
     ) 0 in
     hash
   else hash
+
 let rec sum_non_player_pots sum pid plist =
     match plist with
     | [] -> sum
@@ -81,6 +80,23 @@ let rec sum_non_player_pots sum pid plist =
       if (fst h = pid)
       then sum_non_player_pots sum pid t
       else (snd h)+ (sum_non_player_pots sum pid t)
+
+let account_for_self_destruct pos p hash =
+  let tail = Player.tail p in
+  if (List.length tail > 0)
+  then
+    if List.mem pos tail
+    then
+      let () = add_to_hash hash pos (-1001) (-100) in
+      hash
+    else hash
+  else hash
+
+let rec self_destruct_loop lst p hash =
+  match lst with
+  | [] -> hash
+  | h::t -> self_destruct_loop t p (account_for_self_destruct h p hash)
+
 let direction_potentials p g hash =
   let (ai_x, ai_y) = Player.position p in
   let pid = Player.id p in
@@ -92,10 +108,13 @@ let direction_potentials p g hash =
   let l_cord = (ai_x-1, ai_y) in
   (* Right *)
   let r_cord = (ai_x+1, ai_y) in
+  (* Account for running into tail *)
+  let coord_list = [u_cord;d_cord;l_cord;r_cord] in
+  let updated_hash = self_destruct_loop coord_list p hash in
   List.map (
     fun coord ->
-      sum_non_player_pots 0 pid (Hashtbl.find hash coord)
-  ) [u_cord;d_cord;l_cord;r_cord]
+      sum_non_player_pots 0 pid (Hashtbl.find updated_hash coord)
+  ) coord_list
 
 
 
