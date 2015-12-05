@@ -75,11 +75,14 @@ let distance_list p g =
     [(up_distance (ai_y+1) g);(down_distance (ai_y-1) g);
     (left_distance (ai_x-1) g);(right_distance (ai_x+1) g);]
 
+let manhattan_distance pos1 pos2 =
+  (abs ((fst pos1)-(fst pos2))) + (abs ((snd pos1)-(snd pos2)))
+
+
 let shortest_food_finder p g =
   (* let q = Queue.create () in *)
   (* For now just check player position *)
-(*   let (ai_x, ai_y) = Player.position p in
-  let (pg_x,pg_y) = Grid.dimensions g in
+(*   let (pg_x,pg_y) = Grid.dimensions g in
   let (g_x, g_y) = (pg_x-1,pg_y-1) in
   let distance_hash = Hashtbl.create (pg_x * pg_y) in
   let backpointer_hash = Hashtbl.create (pg_x * pg_y) in
@@ -90,7 +93,18 @@ let shortest_food_finder p g =
     let index = Queue.dequeue q in
     match
   done *)
-  [0;0;0;0]
+  (* Djikstras doesn't make sense here because its too much computation per tick *)
+  (* Instead just take manhattan distance *)
+  let (ai_x, ai_y) = Player.position p in
+  match (Grid.get_food g) with
+    | Some pos ->
+      let food_loc = (Util.cell_to_tuple pos) in
+      let up_v = manhattan_distance food_loc (ai_x,ai_y+1) in
+      let d_v = manhattan_distance food_loc (ai_x,ai_y-1) in
+      let l_v = manhattan_distance food_loc (ai_x+1,ai_y) in
+      let r_v = manhattan_distance food_loc (ai_x-1,ai_y) in
+      [(-up_v);(-d_v);(-l_v);(-r_v)]
+    | None ->   [0;0;0;0]
 
 let rec sum_equal_lists l1 l2 =
   match (l1,l2) with
