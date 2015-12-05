@@ -220,12 +220,12 @@ let player_with_id g id =
   | _ -> None
 
 let prune_player g player =
-  let advance_and_kill player = 
-    if Player.is_alive player then 
+  let advance_and_kill player =
+    if Player.is_alive player then
       let () = Player.add_score player SCORES.tick in
       let () = Player.advance player in
-      Player.kill player 
-    else 
+      Player.kill player
+    else
     ()
   in
 
@@ -241,8 +241,13 @@ let prune_player g player =
     g.food <- None
   | Util.Player x
   | Util.Trail x ->
-    let p = Util.unwrap (player_with_id g x) in Player.add_score p SCORES.kill;
-    advance_and_kill player
+    let p = Util.unwrap (player_with_id g x) in
+    if Player.is_alive p then
+      let () = Player.add_score p SCORES.kill in
+      advance_and_kill player
+    else
+      ()
+
   | Util.Wall -> advance_and_kill player
 
 let reset g =
@@ -258,6 +263,6 @@ let act g =
   List.iter (prune_player g) (players g);
 
   (* Advance all players *)
-  List.iter (fun p -> if (Player.is_alive p) then 
+  List.iter (fun p -> if (Player.is_alive p) then
             let () = Player.add_score p SCORES.tick in
             Player.advance p else ()) (players g);
