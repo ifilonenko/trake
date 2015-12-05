@@ -169,7 +169,10 @@ and receive_frame s id content =
         | _ -> send s id (message s id (Confirm false)))
 
       | Join name ->
-        s.grid <- Grid.add_player (grid s) (Player.create_human id (rules s).trail_length (0,0,0) name);
+        let p = Player.create_human id (rules s).trail_length (0,0,0) name in
+        s.grid <- Grid.add_player (grid s) p;
+        Player.kill p;
+
         let rtn = send s id (message s id (Confirm s.started)) in
 
         let () = (
