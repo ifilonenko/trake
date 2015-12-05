@@ -124,10 +124,18 @@ let rec tick s () =
   );
 
   (* Evaluate dead people *)
-  let num_alive = List.fold_left
-    (fun a p -> if (Player.is_human p) && (Player.is_alive p) then a + 1 else a)
-    0 (Grid.players s.grid) in
-  if num_alive <= 1 then
+  let (hum, ai) = List.fold_left
+    (fun (hum, ai) p ->
+      if (Player.is_human p) && (Player.is_alive p) then
+        (hum + 1, ai)
+      else if (Player.is_ai p) && (Player.is_alive p) then
+        (hum, ai + 1)
+      else
+        (hum, ai)
+      )
+    (0,0) (Grid.players s.grid) in
+
+  if (hum <= 1 && ai = 0) || (hum = 0 && ai <= 2) then
     let () = send_all_players s End in
     return ()
 
