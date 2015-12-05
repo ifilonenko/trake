@@ -59,3 +59,6 @@ val prune_player: t -> Player.t -> unit
  * based on what the player decided to do
  *)
 val act: t -> unit
+
+(* Returns a new grid, reset to its initial conditions *)
+val reset: t -> t

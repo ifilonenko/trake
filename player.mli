@@ -62,3 +62,5 @@ val occupies_cell: t -> int * int -> bool
 (* Calculates the new position and updates the player to advance to that
  * new position and it readjusts the tail *)
 val advance: t -> unit
+
+val reset: t -> unit

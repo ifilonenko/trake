@@ -8,6 +8,8 @@ type rules = {
   trail_length: int;
   ticks_per_second: float;
   food_probability: float;
+  time_between_games: float;
+  game_over_handler: int -> int -> bool;
 }
 
 type t = {
@@ -135,9 +137,14 @@ let rec tick s () =
       )
     (0,0) (Grid.players s.grid) in
 
-  if (hum <= 1 && ai = 0) || (hum = 0 && ai <= 2) then
+  if (rules s).game_over_handler hum ai then
+  (* Game is over, reset and start a new one in 10s *)
     let () = send_all_players s End in
-    return ()
+    s.grid <- Grid.reset s.grid;
+    s.started <- false;
+
+    return () >>= fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
+      >>= (start_ticking s)
 
   else
     (* Send players new board *)
@@ -152,7 +159,8 @@ and start_ticking s () =
   done);
 
   let () = send_all_players s Initial in
-
+  s.started <- true;
+  
   return () >>= tick s
 
 (* Handles incoming communication from clients *)
@@ -178,7 +186,7 @@ and receive_frame s id content =
         let () = (
           (* start game in 10 seconds after first player joins *)
           if List.length (Grid.players s.grid) = 1 then
-            let _ = Lwt_unix.sleep 1. >>= (start_ticking s) in
+            let _ = Lwt_unix.sleep (rules s).time_between_games >>= (start_ticking s) in
             ()
           else
             let _ = send s id (message s id Initial) in

@@ -10,6 +10,7 @@ type t = {
   mutable tail_length: int;
   mutable position: int * int;
   mutable tail: (int * int) list;
+  original_tail_length: int;
   human: bool
 }
 
@@ -21,6 +22,7 @@ let create_human id tl clr lbl =
     alive = true;
     direction = Util.Down;
     tail_length = tl;
+    original_tail_length = tl;
     position = (1, 1);
     tail = [];
     score = 0;
@@ -38,6 +40,7 @@ let create_ai tl clr =
     alive = true;
     direction = Util.Down;
     tail_length = tl;
+    original_tail_length = tl;
     position = (1,1);
     score = 0;
     tail = [];
@@ -144,3 +147,9 @@ let advance p =
     p.position <- new_pos
   else
     p.position <- new_pos
+
+let reset p =
+  p.score <- 0;
+  p.tail <- [];
+  p.alive <- true;
+  p.tail_length <- p.original_tail_length
