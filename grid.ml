@@ -222,7 +222,7 @@ let prune_player g player =
   | Util.Trail x ->
     let p = Util.unwrap (player_with_id g x) in Player.add_score p SCORES.kill;
     advance_and_kill player
-  | Wall -> advance_and_kill player
+  | Util.Wall -> advance_and_kill player
 
 let act g =
   (* Check if the cell they want to move into is occupied *)
