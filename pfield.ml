@@ -6,16 +6,21 @@ let check_and_add_if_true hash pos pid pot =
   then add_to_hash hash pos pid pot
   else ()
 
-let add_potentials_to_hash grid_scale fcell p hash =
+let rec convert_grid_wall_to_list gwalls =
+  match gwalls with
+  | [] -> []
+  | h::t -> (Util.cell_to_tuple (fst h))::(convert_grid_wall_to_list t)
+
+let add_potentials_to_hash grid_scale fcell gwalls p hash =
   let () = print_string "entered\n" in
   let pid = Player.id p in
   let (ai_x, ai_y) = Player.position p in
   let tail = Player.tail p in
   (* Heads should be labeled as -grid_scale *)
-  let () = add_to_hash hash (ai_x,ai_y) pid (-grid_scale) in
+  let () = check_and_add_if_true hash (ai_x,ai_y) pid (-grid_scale) in
   (* Possible directions should be same *)
   let () =
-      (* Up *)
+     (* Up *)
      check_and_add_if_true hash (ai_x,ai_y+1) pid (-grid_scale);
      (* Down *)
      check_and_add_if_true hash (ai_x,ai_y-1) pid (-grid_scale);
@@ -27,7 +32,7 @@ let add_potentials_to_hash grid_scale fcell p hash =
   if (List.length tail > 0)
   then
     let () = List.nth (
-      List.map (fun pos -> add_to_hash hash pos pid (-grid_scale)) tail
+      List.map (fun pos -> check_and_add_if_true hash pos pid (-grid_scale)) tail
     ) 0 in
   let () = List.nth (
     List.map (fun pos ->
@@ -65,6 +70,12 @@ let add_potentials_to_hash grid_scale fcell p hash =
         ()
       | None -> ()
   ) in
+  let wall_list = convert_grid_wall_to_list gwalls in
+  let () = List.nth (
+    List.map (
+      fun pos -> check_and_add_if_true hash pos (-1004) (-grid_scale*10)
+    ) wall_list
+  ) 0 in
   ()
 let create g =
   let (pg_x,pg_y) = Grid.dimensions g in
@@ -72,6 +83,7 @@ let create g =
   let (g_x, g_y) = (pg_x-1,pg_y-1) in
   let hash = Hashtbl.create (pg_x * pg_y) in
   let fcell = Grid.get_food g in
+  let gwalls = Grid.get_walls g in
   let (x,y) = (ref 0,ref 0) in
   while ((!y) <> (g_y+1)) do
     while ((!x) <> g_x) do
@@ -83,7 +95,9 @@ let create g =
   if (List.length players > 0)
   then
     let () = List.nth (
-      List.map (fun p -> add_potentials_to_hash grid_scale fcell p hash) players
+      List.map (
+        fun p -> add_potentials_to_hash grid_scale fcell gwalls p hash
+      ) players
     ) 0 in
     hash
   else hash
@@ -102,7 +116,7 @@ let account_for_self_destruct grid_scale pos p hash =
   then
     if List.mem pos tail
     then
-      let () = add_to_hash hash pos (-1001) (-(grid_scale*10)) in
+      let () = check_and_add_if_true hash pos (-1001) (-(grid_scale*10)) in
       hash
     else hash
   else hash

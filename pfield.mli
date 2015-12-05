@@ -30,8 +30,11 @@ val add_to_hash : ('a, ('b * 'c) list) Hashtbl.t -> 'a -> 'b -> 'c -> unit
 (* This function first checks if it is a valid coordinate then adds to has *)
 val check_and_add_if_true : ('a, ('b * 'c) list) Hashtbl.t -> 'a -> 'b -> 'c -> unit
 
+(* This function converts a list of walls into a list of tuples *)
+val convert_grid_wall_to_list : (Util.cell * Util.cell_status) list -> (int * int) list
+
 (* This function adds potentials to the hash given a player *)
-val add_potentials_to_hash : int -> Util.cell option ->  Player.t -> (int * int, (int * int) list) Hashtbl.t -> unit
+val add_potentials_to_hash : int -> Util.cell option -> (Util.cell * Util.cell_status) list -> Player.t -> (int * int, (int * int) list) Hashtbl.t -> unit
 
 (* This function creates a pfield hash *)
 val create : Grid.t -> (int * int, (int * int) list) Hashtbl.t
