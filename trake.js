@@ -73,12 +73,22 @@ TRAKE = {
 
       self.players[id] = player;
       self.players[id].tail = [player.position];
-      self.setCell(player.position.x, player.position.y, player.color);
+      if (player.alive) {
+        self.setCell(player.position.x, player.position.y, player.color);
+      }
     });
   },
 
   killPlayer: function(player) {
-    alert(p.player_name + " died");
+    var self = this;
+
+    if (player.tail_length > -1) {
+      self.setCell(player.position.x, player.position.y, self.grid.color);
+      player.tail.map(function(segment) {
+        self.setCell(segment.x, segment.y, self.grid.color);
+      });
+      player.tail_length = -1;
+    }
   },
 
   updatePlayers: function(players) {
@@ -95,9 +105,8 @@ TRAKE = {
         p[field] = player[field]
       };
 
-      if (!player.alive && p.alive) {
-          self.killPlayer(p);
-      } else if (!player.alive) {
+      if (!player.alive) {
+        self.killPlayer(p);
         return
       }
 
@@ -140,7 +149,6 @@ TRAKE = {
   },
 
   changeDirection: function(direction) {
-    console.log(direction);
     client.send(JSON.stringify({type: "turn", direction: direction}));
   },
 
