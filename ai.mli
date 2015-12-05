@@ -31,6 +31,12 @@ val sum_equal_lists : int list -> int list -> int list
 (* Print helper *)
 val print_int_list : int list -> unit
 
+(* Check if food exists *)
+val food_exists: Grid.t -> bool
+
+(* Implement shortest distance to food if food exists *)
+val do_djikstras_if_food_exists : int list -> Player.t -> Grid.t -> int list
+
 (* returns a direction that the AI should move based on various computations *)
 val new_direction: Player.t -> Grid.t -> unit
 

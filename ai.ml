@@ -89,18 +89,29 @@ let shortest_food_finder p g =
     let index = Queue.dequeue q in
     match
   done *)
-  [1;1;1]
+  [0;0;0;0]
 
 let rec sum_equal_lists l1 l2 =
   match (l1,l2) with
   | (a::b,c::d) -> (a+c)::(sum_equal_lists b d)
   | _ -> []
 
-let rec print_int_list (input_list: int list) : unit =
+let rec print_int_list input_list =
   match input_list with
   | [] -> ()
   | h::t ->
     print_int h;print_string "\n";print_int_list t
+
+let food_exists g =
+  match Grid.get_food g with
+  | None -> false
+  | Some _ -> true
+
+let do_djikstras_if_food_exists lst p g =
+  if food_exists g
+  (* Need to implement djikstras here *)
+  then sum_equal_lists lst (shortest_food_finder p g)
+  else sum_equal_lists lst [0;0;0;0]
 
 let new_direction p g =
   let distances = distance_list p g in
@@ -112,9 +123,9 @@ let new_direction p g =
   let () = print_int_list potential_values in
   let maximums = sum_equal_lists distances potential_values in
   let () = print_int_list maximums in
-  (* Need to add shortest_distance to food value.... *)
+  let new_maximums = do_djikstras_if_food_exists maximums p g in
   let directions = [Util.Up;Util.Down;Util.Left;Util.Right] in
-  let max_indexes = (index_list_of_maxes maximums 0 (max_val maximums)) in
+  let max_indexes = (index_list_of_maxes new_maximums 0 (max_val new_maximums)) in
   let best_direction = List.nth (direction_list max_indexes directions) 0 in
   let () = Player.update_direction (p) (best_direction) in
   ()

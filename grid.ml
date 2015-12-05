@@ -13,7 +13,7 @@ let from_json_file path =
 let create dims =
   let (w, h) = dims in
   if (w < 20 || h < 20) then raise Invalid_Grid
-  else 
+  else
     let rec gen_vert x y =
       if y > 0 then
           ((x, y), Util.Wall)::(gen_vert x (y - 1))
@@ -30,9 +30,9 @@ let create dims =
   {
     players = [];
     food = None;
-    walls = (gen_vert 0 (h - 1)) @ (gen_vert (w - 1) (h - 1)) @ 
-            (gen_horiz (w - 1) 0) @ (gen_horiz (w - 1) (h - 1)) @ 
-            [((0, 0), Util.Wall)]; 
+    walls = (gen_vert 0 (h - 1)) @ (gen_vert (w - 1) (h - 1)) @
+            (gen_horiz (w - 1) 0) @ (gen_horiz (w - 1) (h - 1)) @
+            [((0, 0), Util.Wall)];
     dimensions = dims;
   }
 
@@ -157,8 +157,11 @@ let to_json_initial g =
 
   `Assoc l
 
-let get_walls g = 
+let get_walls g =
   g.walls
+
+let get_food g =
+  g.food
 
 let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
