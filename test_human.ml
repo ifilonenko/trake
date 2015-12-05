@@ -426,14 +426,33 @@ let new_grid = Grid.add_player grid new_player
 TEST_UNIT = Grid.players new_grid === [new_player]
 
 let () = print_string "test updating direction\n"
-let () = Player.update_direction new_player Util.Left
+TEST_UNIT = Player.update_direction new_player Util.Up === false
+TEST_UNIT = Player.update_direction new_player Util.Left === true
 TEST_UNIT = Player.direction new_player === Util.Left
-let () = Player.update_direction new_player Util.Right
-TEST_UNIT = Player.direction new_player === Util.Right
-let () = Player.update_direction new_player Util.Down
-TEST_UNIT = Player.direction new_player === Util.Down
-let () = Player.update_direction new_player Util.Up
+TEST_UNIT = Player.update_direction new_player Util.Right === false
+TEST_UNIT = Player.update_direction new_player Util.Up === true
 TEST_UNIT = Player.direction new_player === Util.Up
+TEST_UNIT = Player.update_direction new_player Util.Down === false
+TEST_UNIT = Player.update_direction new_player Util.Right === true
+TEST_UNIT = Player.direction new_player === Util.Right
+TEST_UNIT = Player.update_direction new_player Util.Left === false
+TEST_UNIT = Player.update_direction new_player Util.Up === true
+TEST_UNIT = Player.direction new_player === Util.Up
+TEST_UNIT = Player.update_direction new_player Util.Down === false
+TEST_UNIT = Player.update_direction new_player Util.Left === true
+TEST_UNIT = Player.direction new_player === Util.Left
+TEST_UNIT = Player.update_direction new_player Util.Right === false
+TEST_UNIT = Player.update_direction new_player Util.Down === true
+TEST_UNIT = Player.direction new_player === Util.Down
+TEST_UNIT = Player.update_direction new_player Util.Up === false
+TEST_UNIT = Player.update_direction new_player Util.Right === true
+TEST_UNIT = Player.direction new_player === Util.Right
+TEST_UNIT = Player.update_direction new_player Util.Left === false
+TEST_UNIT = Player.update_direction new_player Util.Down === true
+TEST_UNIT = Player.direction new_player === Util.Down
+
+let _ = Player.update_direction new_player Util.Left
+let _ = Player.update_direction new_player Util.Up
 
 let () = print_string "test killing a human player\n"
 let kill = Player.create_human 2 1000 (1, 1, 1) "thomas"
@@ -488,8 +507,8 @@ TEST_UNIT = Grid.player_with_id new_grid 4 === Some fourth_player
 
 let () = Player.update_position third_player (1, 1)
 let () = Player.update_position fourth_player (1, 2)
-let () = Player.update_direction third_player Util.Right
-let () = Player.update_direction fourth_player Util.Right
+let _ = Player.update_direction third_player Util.Right
+let _ = Player.update_direction fourth_player Util.Right
 
 let () = print_string "tick1 with multiple players on grid\n"
 let () = Grid.act new_grid
@@ -538,7 +557,7 @@ TEST_UNIT = Player.tail fourth_player ===
 TEST_UNIT = Player.score third_player === 10 
 TEST_UNIT = Player.score fourth_player === 10
 
-let () = print_string "tick6 check if tail correctly disappears"
+let () = print_string "tick6 check if tail correctly disappears\n"
 let () = Grid.act new_grid
 TEST_UNIT = Player.position third_player === (7, 1)
 TEST_UNIT = Player.position fourth_player === (7, 2)
@@ -572,7 +591,7 @@ TEST_UNIT = Player.score third_player === 16
 TEST_UNIT = Player.score fourth_player === 16
 
 let () = print_string "test killing a player on player/trail\n"
-let () = Player.update_direction third_player Util.Down
+let _ = Player.update_direction third_player Util.Down
 TEST_UNIT = Grid.status_of_cell new_grid (Util.add_cells 
 			(Player.position third_player) (Util.vector_of_direction 
 			(Player.direction third_player))) === 
@@ -589,7 +608,7 @@ TEST_UNIT = Player.score third_player === 18
 TEST_UNIT = Player.score fourth_player === 1018
 
 let () = print_string "tick10 to see if score updates correctly\n"
-let () = Player.update_direction fourth_player Util.Down
+let _ = Player.update_direction fourth_player Util.Down
 let () = Grid.act new_grid
 TEST_UNIT = Player.position fourth_player === (10, 3)
 TEST_UNIT = Player.tail fourth_player === 
@@ -623,8 +642,24 @@ let () = print_string "test dead players\n"
 let () = Grid.act new_grid
 TEST_UNIT = Player.position fourth_player === (48, 49)
 TEST_UNIT = Player.position third_player === (9, 2)
+TEST_UNIT = Player.is_alive fourth_player === false
+TEST_UNIT = Player.is_alive third_player === false
 TEST_UNIT = Player.tail fourth_player === []
+TEST_UNIT = Player.tail third_player === []
 TEST_UNIT = Player.score fourth_player === 1024
+TEST_UNIT = Player.score third_player === 18
+
+let () = print_string "test2 dead players\n"
+let () = Grid.act new_grid
+TEST_UNIT = Player.position fourth_player === (48, 49)
+TEST_UNIT = Player.position third_player === (9, 2)
+TEST_UNIT = Player.is_alive fourth_player === false
+TEST_UNIT = Player.is_alive third_player === false
+TEST_UNIT = Player.tail fourth_player === []
+TEST_UNIT = Player.tail third_player === []
+TEST_UNIT = Player.score fourth_player === 1024
+TEST_UNIT = Player.score third_player === 18
+
 
 let () = print_string "test vector_of_direction\n"
 TEST_UNIT = Util.vector_of_direction (Util.Up) === (0, -1)
@@ -636,9 +671,14 @@ let () = print_string "test add_cells\n"
 TEST_UNIT = Util.add_cells (1, 2) (2, 1) === (3, 3)
 
 let () = print_string "Spawn food and see if Grid represents state correctly\n"
-let () = Grid.spawn_food new_grid
-let x = Util.unwrap (Grid.get_food new_grid)
-let (x1, y1) = Util.cell_to_tuple x
+
+let rec helper g =
+	let () = Grid.spawn_food new_grid in
+	let x = Util.unwrap (Grid.get_food new_grid) in
+    let (x2, y2) = Util.cell_to_tuple x in
+    if x2 >= 47 then helper g else (x2, y2)
+
+let (x1, y1) = helper new_grid
 TEST_UNIT = Grid.status_of_cell new_grid (x1, y1) === Util.Food
 
 let () = print_string "spawn test_player to get food\n"
@@ -648,7 +688,7 @@ TEST_UNIT = Player.tail_length fifth_player === 1
 
 let () = print_string "set up player right next to food\n"
 let () = Player.update_position fifth_player (x1 - 1, y1)
-let () = Player.update_direction fifth_player Util.Right
+let _ = Player.update_direction fifth_player Util.Right
 
 let () = print_string "tick1 to see if player eats food and mutates correctly\n"
 let () = Grid.act new_grid
