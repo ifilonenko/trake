@@ -2,6 +2,7 @@
  * into a seperate file. The Ai will be given a Player and Grid and calculate
  * the best direction to go in response to the givens.
  *)
+
 (* Implement a queue for DFS *)
 module Queue :
   sig type 'a t = ('a list * 'a list) ref
@@ -25,6 +26,13 @@ val direction_list : int list -> 'a list -> 'a list
    in the order of Up | Down | Left | Right *)
 val distance_list : Player.t -> Grid.t -> int list
 
+(* Determine Manhattan distance between two points *)
+val manhattan_distance : int * int -> int * int -> int
+
+(* Generate a list of distances to see how far the AI is from the food in the
+   order of best distances from the previous computation *)
+val shortest_food_finder : Player.t -> Grid.t -> int list
+
 (* Sum two lists together with same number of elements *)
 val sum_equal_lists : int list -> int list -> int list
 
@@ -39,7 +47,3 @@ val do_djikstras_if_food_exists : int list -> Player.t -> Grid.t -> int list
 
 (* returns a direction that the AI should move based on various computations *)
 val new_direction: Player.t -> Grid.t -> unit
-
-(* Generate a list of distances to see how far the AI is from the food in the
-   order of best distances from the previous ccomputation *)
-val shortest_food_finder : Player.t -> Grid.t -> int list
