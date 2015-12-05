@@ -44,3 +44,6 @@ let cell_of_json json =
   | _ -> failwith "Invalid JSON for cell_of_json"
 
 let cell_to_tuple (x,y) = (x,y)
+let unwrap o = match o with
+  | Some x -> x
+  | None -> failwith "Failed to explicitly unwrap optional"

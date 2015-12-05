@@ -123,13 +123,19 @@ let rec tick s () =
     Grid.spawn_food g
   );
 
-  (* Send players new board *)
-  let () = send_all_players s Update in
+  (* Evaluate dead people *)
+  let num_alive = List.fold_left
+    (fun a p -> if (Player.is_human p) && (Player.is_alive p) then a + 1 else a)
+    0 (Grid.players s.grid) in
+  if num_alive <= 1 then
+    let () = send_all_players s End in
+    return ()
 
-  return ()
-
-  (* Tick again *)
-  >>= (tick s)
+  else
+    (* Send players new board *)
+    let () = send_all_players s Update in
+    (* Tick again *)
+    return () >>= (tick s)
 
 and start_ticking s () =
   (* create phantom AI players *)

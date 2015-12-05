@@ -4,6 +4,7 @@ type t = {
   id: int;
   label: string;
   color: color;
+  mutable score: int;
   mutable alive: bool;
   mutable direction: Util.direction;
   mutable tail_length: int;
@@ -22,6 +23,7 @@ let create_human id tl clr lbl =
     tail_length = tl;
     position = (1, 1);
     tail = [];
+    score = 0;
     human = true;
   }
 
@@ -37,6 +39,7 @@ let create_ai tl clr =
     direction = Util.Down;
     tail_length = tl;
     position = (1,1);
+    score = 0;
     tail = [];
     human = false;
   }
@@ -75,12 +78,19 @@ let color p =
 let tail_length p =
   p.tail_length
 
+let score p =
+  p.score
+
+let add_score p i =
+  p.score <- (score p) + i
 
 let eat_food p =
   p.tail_length <- (tail_length p) + 1
 
 let position p =
   p.position
+
+
 
 let to_json_update p =
   `Assoc [

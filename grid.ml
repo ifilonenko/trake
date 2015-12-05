@@ -1,5 +1,11 @@
 exception Invalid_Grid
 
+module SCORES = struct
+  let kill = 1000
+  let food = 100
+  let tick = 2
+end
+
 type t = {
     walls: (Util.cell * Util.cell_status) list;
     mutable food: Util.cell option;
@@ -25,7 +31,6 @@ let from_json_file path =
     walls = walls;
     dimensions = dims;
   }
-
 
 let create dims =
   let (w, h) = dims in
@@ -55,7 +60,6 @@ let create dims =
 
 let status_of_cell g c =
   try
-  (*TODO: Implement this*)
   let rec trail_helper players =
     match players with
     | h::t -> (let rec match_trail trl =
@@ -200,13 +204,25 @@ let player_with_id g id =
   | _ -> None
 
 let prune_player g player =
+  let advance_and_kill player = let () = Player.advance player in Player.kill player in
+
   let pos = Util.add_cells (Player.position player)
             (Util.vector_of_direction (Player.direction player)) in
+
+  Player.add_score player SCORES.tick;
+
   let status = status_of_cell g pos in
   match status with
   | Util.Empty -> () (* all good, player can move here *)
-  | Util.Food -> Player.eat_food player; g.food <- None
-  | _ -> let () = Player.advance player in Player.kill player
+  | Util.Food ->
+    Player.eat_food player;
+    Player.add_score player SCORES.food;
+    g.food <- None
+  | Util.Player x
+  | Util.Trail x ->
+    let p = Util.unwrap (player_with_id g x) in Player.add_score p SCORES.kill;
+    advance_and_kill player
+  | Wall -> advance_and_kill player
 
 let act g =
   (* Check if the cell they want to move into is occupied *)

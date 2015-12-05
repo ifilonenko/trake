@@ -38,6 +38,9 @@ val label: t -> string
 (* Gives the given player's color  *)
 val color: t -> color
 
+val score: t -> int
+val add_score: t -> int -> unit
+
 (* JSON representation of this player as:
   {
      id: string
