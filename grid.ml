@@ -241,15 +241,14 @@ let prune_player g player =
   | Util.Wall -> advance_and_kill player
 
 let reset g =
-  let new_g = { g with
+  { g with
     food = None;
     players = [];
-  } in
-  List.fold_left (fun a p ->
-          if (Player.is_human p) then let () = Player.reset p in add_player a p
-          else a) new_g (players g)
+  }
 
 let act g =
+
+
   (* Check if the cell they want to move into is occupied *)
   List.iter (prune_player g) (players g);
 

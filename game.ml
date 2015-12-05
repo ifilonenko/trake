@@ -16,6 +16,7 @@ type t = {
   rules: rules;
   mutable grid: Grid.t;
   mutable callbacks: (int * (Frame.t -> unit Lwt.t)) list;
+  mutable players: (int * string) list;
   host: string;
   port: int;
   mutable started: bool;
@@ -29,6 +30,7 @@ let create a p g r =
     grid = g;
     callbacks = [];
     started = false;
+    players = [];
   }
 
 let create_from_json a p j r =
@@ -39,6 +41,7 @@ let create_from_json a p j r =
     grid = Grid.from_json_file j;
     callbacks = [];
     started = false;
+    players = []
   }
 
 (* TCP port this game is running on *)
@@ -68,7 +71,6 @@ let send s id content =
     handler (Frame.create ~opcode:Frame.Opcode.Text ~content ())
   with
   | _ -> return ()
-
 
 (* Turns json into msg *)
 let parse msg =
@@ -142,7 +144,7 @@ let rec tick s () =
     (* Send players new board *)
     let () = send_all_players s Update in
     (* Tick again *)
-    return () >>= (tick s)
+    return () >>= tick s
   else
     let () = send_all_players s End in
     s.started <- false;
@@ -150,7 +152,16 @@ let rec tick s () =
 
 
 and start_ticking s () =
+try
   s.grid <- Grid.reset s.grid;
+
+  let add_human (id, name) =
+    let p = Player.create_human id (rules s).trail_length (0,0,0) name in
+    s.grid <- Grid.add_player s.grid p;
+    ()
+  in
+
+  List.iter add_human s.players;
 
   (* create phantom AI players *)
   (while List.length (Grid.players s.grid) < 4 do
@@ -158,24 +169,22 @@ and start_ticking s () =
   done);
 
   let () = List.iter Player.reanimate (Grid.players s.grid) in
-  let (hum, ai) = count_players s in
 
-  if hum > 0 then
+  if List.length s.players > 0 then
     let () = send_all_players s Initial in
 
-    return () >>=
-      fun () -> Lwt_unix.sleep ((rules s).time_between_games)
+    Lwt_unix.sleep ((rules s).time_between_games)
       >>= fun () ->
         s.started <- true;
-        return ()
-      >>= tick s
+        tick s ()
   else
+    let () = s.started <- false in
     return ()
-
+    with
+    | Failure x -> print_endline x; return ()
+    | _ -> print_endline "crashed"; failwith "Unknown"
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
-    print_endline (Yojson.Basic.to_string content);
-
     let open Yojson.Basic.Util in
     match content with
     | `Assoc _ -> (
@@ -190,17 +199,14 @@ and receive_frame s id content =
         | _ -> send s id (message s id (Confirm false)))
 
       | Join name ->
-        let p = Player.create_human id (rules s).trail_length (0,0,0) name in
-        s.grid <- Grid.add_player (grid s) p;
+        let () = s.players <- ((id, name)::s.players) in
+
         let rtn = send s id (message s id (Confirm s.started)) in
         let (hum, _) = count_players s in
         let () = (
           (* start game in 10 seconds after first player joins *)
-          if hum = 1 then
+          if hum = 0 then
             let _ = start_ticking s () in
-            ()
-          else
-            let _ = send s id (message s id Initial) in
             ()
           ) in
         rtn
@@ -240,6 +246,7 @@ let start s =
       | Opcode.Text -> receive_frame s id (Yojson.Basic.from_string frame.content) >>= response
       | Opcode.Close ->
         s.grid <- (Grid.remove_player s.grid id);
+        s.players <- List.filter (fun (i, _) -> i <> id) s.players;
         send (Frame.close 1000)
       | _ -> send (Frame.close 1002)
     in
