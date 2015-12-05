@@ -557,7 +557,7 @@ TEST_UNIT = Player.tail fourth_player ===
 TEST_UNIT = Player.score third_player === 10 
 TEST_UNIT = Player.score fourth_player === 10
 
-let () = print_string "tick6 check if tail correctly disappears"
+let () = print_string "tick6 check if tail correctly disappears\n"
 let () = Grid.act new_grid
 TEST_UNIT = Player.position third_player === (7, 1)
 TEST_UNIT = Player.position fourth_player === (7, 2)

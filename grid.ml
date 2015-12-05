@@ -221,13 +221,12 @@ let player_with_id g id =
 
 let prune_player g player =
   let advance_and_kill player = 
-    let () = if Player.is_alive player then 
+    if Player.is_alive player then 
       let () = Player.add_score player SCORES.tick in
-      Player.advance player
-    else
-      ()
-    in
-    Player.kill player 
+      let () = Player.advance player in
+      Player.kill player 
+    else 
+    ()
   in
 
   let pos = Util.add_cells (Player.position player)
