@@ -23,6 +23,8 @@ val status_of_cell: t -> int * int -> Util.cell_status
  *)
 val add_player: t -> Player.t -> t
 
+val remove_player: t -> int -> t
+
 (* Gives maximum width and height of the grid,
  * though it may not be a perfect quadrilateral
  *)
@@ -59,3 +61,6 @@ val prune_player: t -> Player.t -> unit
  * based on what the player decided to do
  *)
 val act: t -> unit
+
+(* Returns a new grid, reset to its initial conditions *)
+val reset: t -> t

@@ -7,6 +7,8 @@ type rules = {
   trail_length: int;
   ticks_per_second: float;
   food_probability: float;
+  time_between_games: float;
+  game_over_handler: int -> int -> bool;
 }
 
 (* creates a game instance given a domain/ip, port, and a grid *)
