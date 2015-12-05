@@ -91,7 +91,6 @@ let position p =
   p.position
 
 
-
 let to_json_update p =
   `Assoc [
     ("id", `Int (id p));
@@ -99,7 +98,8 @@ let to_json_update p =
     ("tail_length", `Int (tail_length p));
     ("score", `Int 0);
     ("position", Util.json_of_cell (position p));
-    ("alive", `Bool (is_alive p))
+    ("alive", `Bool (is_alive p));
+    ("score", `Int (score p))
   ]
 
 let to_json_initial p =
