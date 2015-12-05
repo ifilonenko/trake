@@ -104,7 +104,7 @@ let rec print_int_list input_list =
     print_int h;print_string "\n";print_int_list t
 
 let food_exists g =
-  match Grid.get_food g with
+  match (Grid.get_food g) with
   | None -> false
   | Some _ -> true
 

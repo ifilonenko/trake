@@ -6,7 +6,7 @@ let check_and_add_if_true hash pos pid pot =
   then add_to_hash hash pos pid pot
   else ()
 
-let add_potentials_to_hash grid_scale p hash =
+let add_potentials_to_hash grid_scale fcell p hash =
   let () = print_string "entered\n" in
   let pid = Player.id p in
   let (ai_x, ai_y) = Player.position p in
@@ -51,13 +51,27 @@ let add_potentials_to_hash grid_scale p hash =
       ()
      ) ((ai_x,ai_y)::tail)
   ) 0 in
+  let () =
+  (
+    match fcell with
+      | Some pos ->
+        let food_loc = (Util.cell_to_tuple pos) in
+        let (fx,fy) = food_loc in
+        let () = check_and_add_if_true hash food_loc (-1003) (grid_scale*10) in
+        let () = check_and_add_if_true hash (fx,fy+1) (-1003) (grid_scale/2) in
+        let () = check_and_add_if_true hash (fx,fy-1) (-1003) (grid_scale/2) in
+        let () = check_and_add_if_true hash (fx+1,fy) (-1003) (grid_scale/2) in
+        let () = check_and_add_if_true hash (fx-1,fy) (-1003) (grid_scale/2) in
+        ()
+      | None -> ()
+  ) in
   ()
-
 let create g =
   let (pg_x,pg_y) = Grid.dimensions g in
   let grid_scale = max pg_x pg_y in
   let (g_x, g_y) = (pg_x-1,pg_y-1) in
   let hash = Hashtbl.create (pg_x * pg_y) in
+  let fcell = Grid.get_food g in
   let (x,y) = (ref 0,ref 0) in
   while ((!y) <> (g_y+1)) do
     while ((!x) <> g_x) do
@@ -69,7 +83,7 @@ let create g =
   if (List.length players > 0)
   then
     let () = List.nth (
-      List.map (fun p -> add_potentials_to_hash grid_scale p hash) players
+      List.map (fun p -> add_potentials_to_hash grid_scale fcell p hash) players
     ) 0 in
     hash
   else hash
@@ -118,6 +132,3 @@ let direction_potentials p g hash =
     fun coord ->
       sum_non_player_pots 0 pid (Hashtbl.find updated_hash coord)
   ) coord_list
-
-
-

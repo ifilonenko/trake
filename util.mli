@@ -25,3 +25,5 @@ val direction_of_string: string -> direction
 val string_of_direction: direction -> string
 
 val json_of_cell: cell -> Yojson.Basic.json
+
+val cell_to_tuple : cell -> int * int

@@ -33,3 +33,5 @@ let string_of_direction d =
 
 let json_of_cell (x, y) =
   `Assoc [("x", `Int x); ("y", `Int y)]
+
+let cell_to_tuple (x,y) = (x,y)
