@@ -251,7 +251,9 @@ let reset g =
     food = None;
     players = [];
   } in
-  List.fold_left (fun a p -> Player.reset p; add_player a p) new_g (players g)
+  List.fold_left (fun a p ->
+          if (Player.is_human p) then let () = Player.reset p in add_player a p
+          else a) new_g (players g)
 
 let act g =
   (* Check if the cell they want to move into is occupied *)
