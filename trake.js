@@ -77,6 +77,10 @@ TRAKE = {
     });
   },
 
+  killPlayer: function(player) {
+    alert(p.player_name + " died");
+  },
+
   updatePlayers: function(players) {
     var self = this;
 
@@ -90,6 +94,12 @@ TRAKE = {
       for (field in player) {
         p[field] = player[field]
       };
+
+      if (!player.alive && p.alive) {
+          self.killPlayer(p);
+      } else if (!player.alive) {
+        return
+      }
 
       // Move trake
       p.tail.push(p.position);
@@ -129,247 +139,30 @@ TRAKE = {
     this.updatePlayers(jsonData.players);
   },
 
+  changeDirection: function(direction) {
+    console.log(direction);
+    client.send(JSON.stringify({type: "turn", direction: direction}));
+  },
+
   init: function() {
-    this.ctx = document.querySelector('canvas').getContext('2d');
+    var self = this;
+
+    self.ctx = document.querySelector('canvas').getContext('2d');
+
+    document.onkeyup = function(e) {
+      if (e.keyCode === 87 || e.keyCode === 38) {
+        self.changeDirection('up');
+      } else if (e.keyCode === 65 || e.keyCode === 37) {
+        self.changeDirection('left');
+      } else if (e.keyCode === 83 || e.keyCode === 40) {
+        self.changeDirection('down');
+      } else if (e.keyCode === 68 || e.keyCode === 39) {
+        self.changeDirection('right');
+      }
+    };
   }
 
 }
-
-
-var tick0 = {
-  type: "Initial",
-  walls: [
-    {x: 0, y: 0},
-    {x: 1, y: 0},
-    {x: 2, y: 0},
-    {x: 3, y: 0}
-  ],
-  food: {
-    x: 3,
-    y: 3
-  },
-  dimensions: {
-    rows: 20,
-    cols: 20
-  },
-  players: [
-    {
-      id: 0,
-      label: "Player 1",
-      color: "#b31b1b",
-      direction: "Up",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 10,
-        y: 10
-      },
-      human: true
-    },
-    {
-      id: 1,
-      label: "Player 2 (AI)",
-      color: "#008800",
-      direction: "Down",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 11,
-        y: 17
-      },
-      human: false
-    }
-  ]
-}
-
-var tick1 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 9
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 11,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tick2 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 8
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 10,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tick3 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 7
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 9,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tick4 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 6
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 8,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tick5 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 5
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 7,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tick6 = {
-  type: "Update",
-  food: {
-    x: 3,
-    y: 3
-  },
-  players: [
-    {
-      id: 0,
-      direction: "Up",
-      tail_length: 5,
-      score: 2,
-      position: {
-        x: 10,
-        y: 4
-      }
-    },
-    {
-      id: 1,
-      direction: "Left",
-      tail_length: 5,
-      score: 0,
-      position: {
-        x: 6,
-        y: 18
-      }
-    }
-  ]
-}
-
-var tickN = {
-  type: "End",
-  final_scores: [
-    {id: 0, score: 200},
-    {id: 1, score: 50}
-  ]
-}
-
 
 // Join Protocol
 //
@@ -422,22 +215,19 @@ client.onclose = function() {
 };
 
 client.onmessage = function(e) {
-    // console.log("Received: '" + e.data + "'");
     var data = JSON.parse(e.data);
     console.log(data);
 
     if (data.type === "initial") {
       TRAKE.initialTick(data);
-
     } else if (data.type === "update") {
       TRAKE.updateTick(data);
+    }else if (data.type === "end") {
+      alert('Game Over')
     }
 };
 
-// TRAKE.initialTick(tick0);
-// window.setTimeout(function(){TRAKE.updateTick(tick1)},1000);
-// window.setTimeout(function(){TRAKE.updateTick(tick2)},2000);
-// window.setTimeout(function(){TRAKE.updateTick(tick3)},3000);
-// window.setTimeout(function(){TRAKE.updateTick(tick4)},4000);
-// window.setTimeout(function(){TRAKE.updateTick(tick5)},5000);
-// window.setTimeout(function(){TRAKE.updateTick(tick6)},6000);
+window.onbeforeunload = function() {
+    client.onclose = function () {}; // disable onclose handler first
+    client.close()
+};
