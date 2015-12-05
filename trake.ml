@@ -8,7 +8,7 @@ let s = Game.create "0.0.0.0" 3110 g
   Game.{ trail_length = 5;
           ticks_per_second = 5.;
           food_probability = 0.5;
-          time_between_games = 5.;
+          time_between_games = 1.;
           game_over_handler = fun hum ai -> (hum <= 1 && ai = 0) || (hum = 0 && ai <= 2)
         }
 let () = Server.serve "./" "0.0.0.0" 8080

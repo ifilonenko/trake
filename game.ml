@@ -122,53 +122,52 @@ let count_players s =
 
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
-
-  let rls = rules s in
-  let g = grid s in
-
-  (* Move AI players *)
-  List.iter (fun p -> if (Player.is_ai p) then Ai.new_direction p s.grid) (Grid.players s.grid);
-
-  (* Move all players in their direction *)
-  Grid.act g;
-
-  (* Spawn food based on a random number *)
-  (if Random.float 1. <= rls.food_probability then
-    Grid.spawn_food g
-  );
-
-  (* Evaluate dead people *)
   let (hum, ai) = count_players s in
 
-  if (rules s).game_over_handler hum ai then
-    let () = send_all_players s End in
-    s.grid <- Grid.reset s.grid;
-    s.started <- false;
+  if not ((rules s).game_over_handler hum ai) then
+    let rls = rules s in
+    let g = grid s in
 
-    return () >>= (start_ticking s)
+    (* Move AI players *)
+    List.iter (fun p -> if (Player.is_ai p) then Ai.new_direction p s.grid) (Grid.players s.grid);
 
-  else
+    (* Move all players in their direction *)
+    Grid.act g;
+
+    (* Spawn food based on a random number *)
+    (if Random.float 1. <= rls.food_probability then
+      Grid.spawn_food g
+    );
+
     (* Send players new board *)
     let () = send_all_players s Update in
     (* Tick again *)
     return () >>= (tick s)
+  else
+    let () = send_all_players s End in
+    s.started <- false;
+    return () >>= start_ticking s
+
 
 and start_ticking s () =
+  s.grid <- Grid.reset s.grid;
+
+  (* create phantom AI players *)
+  (while List.length (Grid.players s.grid) < 4 do
+    s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
+  done);
+
+  let () = List.iter Player.reanimate (Grid.players s.grid) in
   let (hum, ai) = count_players s in
 
   if hum > 0 then
-    let () = List.iter Player.reanimate (Grid.players s.grid) in
-
-    (* create phantom AI players *)
-    (while List.length (Grid.players s.grid) < 4 do
-      s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
-    done);
-
     let () = send_all_players s Initial in
 
     return () >>=
-      fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
-      >>= fun () -> s.started <- true; return ()
+      fun () -> Lwt_unix.sleep ((rules s).time_between_games)
+      >>= fun () ->
+        s.started <- true;
+        return ()
       >>= tick s
   else
     return ()
@@ -186,8 +185,8 @@ and receive_frame s id content =
         let p = Grid.player_with_id (grid s) id in
         (match p with
         | Some x ->
-          let success = Player.update_direction x d in
-          send s id (message s id (Confirm (s.started && success)))
+          let _ = Player.update_direction x d in
+          return ()
         | _ -> send s id (message s id (Confirm false)))
 
       | Join name ->
