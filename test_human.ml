@@ -481,6 +481,11 @@ let new_grid = Grid.add_player grid2 third_player
 let new_grid = Grid.add_player new_grid fourth_player
 TEST_UNIT = Grid.players new_grid === [fourth_player; third_player]
 
+let () = print_string "test player_with_id\n"
+TEST_UNIT = Grid.player_with_id new_grid 3 === Some third_player
+TEST_UNIT = Grid.player_with_id new_grid 5 === None
+TEST_UNIT = Grid.player_with_id new_grid 4 === Some fourth_player
+
 let () = Player.update_position third_player (1, 1)
 let () = Player.update_position fourth_player (1, 2)
 let () = Player.update_direction third_player Util.Right
