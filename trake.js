@@ -98,7 +98,9 @@ TRAKE = {
       var p = self.players[player.id], tailDiff;
 
       // Convert head tile to a tail tile
-      self.setCell(p.position.x, p.position.y, p.color, true);
+      if (player.alive) {
+        self.setCell(p.position.x, p.position.y, p.color, true);
+      }
 
       // Copy over new state data
       for (field in player) {
