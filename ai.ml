@@ -37,7 +37,6 @@ let rec direction_list l dl =
 
 let distance_list p g =
     let (ai_x, ai_y) = Player.position p in
-    let () = print_int ai_x;print_string ", ";print_int ai_y;print_string "\n" in
     let (pg_x,pg_y) = Grid.dimensions g in
     let (g_x, g_y) = (pg_x-1,pg_y-1) in
     let rec up_distance pos g =
@@ -96,6 +95,8 @@ let shortest_food_finder p g =
   (* Djikstras doesn't make sense here because its too much computation per tick *)
   (* Instead just take manhattan distance *)
   let (ai_x, ai_y) = Player.position p in
+  let (pg_x,pg_y) = Grid.dimensions g in
+  let grid_scale = max pg_x pg_y in
   match (Grid.get_food g) with
     | Some pos ->
       let food_loc = (Util.cell_to_tuple pos) in
@@ -103,7 +104,10 @@ let shortest_food_finder p g =
       let d_v = manhattan_distance food_loc (ai_x,ai_y-1) in
       let l_v = manhattan_distance food_loc (ai_x+1,ai_y) in
       let r_v = manhattan_distance food_loc (ai_x-1,ai_y) in
-      [(-up_v);(-d_v);(-l_v);(-r_v)]
+      (* By scaling by grid_scale this makes the AI a little dumber, which
+         makes the game playable *)
+      [(-up_v)*(grid_scale/4);(-d_v)*(grid_scale/4);(-l_v)*(grid_scale/4);
+      (-r_v)*grid_scale/4]
     | None ->   [0;0;0;0]
 
 let rec sum_equal_lists l1 l2 =
@@ -129,14 +133,20 @@ let do_djikstras_if_food_exists lst p g =
   else sum_equal_lists lst [0;0;0;0]
 
 let new_direction p g =
+  (* First calculate distance ot dangers *)
   let distances = distance_list p g in
   let potential_field_hash = Pfield.create g in
+  (* Next calculate the potentials at each of the direction coordinates *)
   let potential_values = Pfield.direction_potentials p g potential_field_hash in
   let maximums = sum_equal_lists distances potential_values in
+  (* Lastly calculate distance to food *)
+  (* Objective function = [danger_distance + potential + (-food_distance) ]
+     and our goal is to maximize this objective function and return the direction
+  *)
   let new_maximums = do_djikstras_if_food_exists maximums p g in
-  let () = print_int_list new_maximums in
-  let directions = [Util.Up;Util.Down;Util.Left;Util.Right] in
+  let directions = [Util.Down;Util.Up;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes new_maximums 0 (max_val new_maximums)) in
+  (* Just in case there is a tie (which there wont in most cases) return first *)
   let best_direction = List.nth (direction_list max_indexes directions) 0 in
-  let () = Player.update_direction (p) (best_direction) in
+  let _ = Player.update_direction (p) (best_direction) in
   ()

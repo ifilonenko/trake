@@ -10,6 +10,7 @@ type t = {
   mutable tail_length: int;
   mutable position: int * int;
   mutable tail: (int * int) list;
+  original_tail_length: int;
   human: bool
 }
 
@@ -21,6 +22,7 @@ let create_human id tl clr lbl =
     alive = true;
     direction = Util.Down;
     tail_length = tl;
+    original_tail_length = tl;
     position = (1, 1);
     tail = [];
     score = 0;
@@ -38,6 +40,7 @@ let create_ai tl clr =
     alive = true;
     direction = Util.Down;
     tail_length = tl;
+    original_tail_length = tl;
     position = (1,1);
     score = 0;
     tail = [];
@@ -57,7 +60,14 @@ let direction p =
   p.direction
 
 let update_direction p d =
-  p.direction <- d
+  Util.(
+  match (p.direction, d) with
+  | (Left, Right)
+  | (Right, Left)
+  | (Down, Up)
+  | (Up, Down) -> false
+  | _ -> p.direction <- d; true
+  )
 
 let update_position p c =
   p.position <- c
@@ -68,6 +78,11 @@ let is_alive p =
 let kill p =
   p.tail <- [];
   p.alive <- false
+
+let reanimate p =
+  p.alive <- true;
+  p.tail <- [];
+  p.tail_length <- p.original_tail_length
 
 let label p =
   p.label
@@ -89,7 +104,6 @@ let eat_food p =
 
 let position p =
   p.position
-
 
 let to_json_update p =
   `Assoc [
@@ -144,3 +158,9 @@ let advance p =
     p.position <- new_pos
   else
     p.position <- new_pos
+
+let reset p =
+  p.score <- 0;
+  p.tail <- [];
+  p.alive <- true;
+  p.tail_length <- p.original_tail_length
