@@ -83,10 +83,12 @@ let status_of_cell g c =
       in
       let rec player_helper players =
         match players with
-        | h::t -> if ((fst c) = (fst (Player.position h)) &&
-                     (snd c) = (snd (Player.position h))) then Util.Player (Player.id h)
-                  else
-                    player_helper t
+        | h::t when (Player.is_alive h) ->
+          if ((fst c) = (fst (Player.position h)) &&
+               (snd c) = (snd (Player.position h))) then Util.Player (Player.id h)
+          else
+              player_helper t
+        | h::t -> player_helper t
         | [] -> trail_helper g.players
       in
       let food_helper f =
@@ -115,7 +117,6 @@ let rec add_player g p =
   let x = Random.int (fst g.dimensions) in
   let y = Random.int (snd g.dimensions) in
   if (status_of_cell g (x, y) <> Util.Empty) then
-    let () = print_endline (Printf.sprintf "%i %i %i %i" x y (fst g.dimensions) (snd g.dimensions)) in
     add_player g p
   else
     if (helper g (x, y + 1) && helper g (x, y + 2) &&
