@@ -194,9 +194,10 @@ and receive_frame s id content =
         let p = Player.create_human id (rules s).trail_length (0,0,0) name in
         s.grid <- Grid.add_player (grid s) p;
         let rtn = send s id (message s id (Confirm s.started)) in
+        let (hum, _) = count_players s in
         let () = (
           (* start game in 10 seconds after first player joins *)
-          if List.length (Grid.players s.grid) = 1 then
+          if hum = 1 then
             let _ = start_ticking s () in
             ()
           else
