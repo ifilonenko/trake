@@ -108,6 +108,18 @@ let message s id msg =
   in
   Yojson.Basic.to_string json
 
+let count_players s =
+  List.fold_left
+    (fun (hum, ai) p ->
+      if (Player.is_human p) && (Player.is_alive p) then
+        (hum + 1, ai)
+      else if (Player.is_ai p) && (Player.is_alive p) then
+        (hum, ai + 1)
+      else
+        (hum, ai)
+      )
+    (0,0) (Grid.players s.grid)
+
 let rec tick s () =
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
 
@@ -126,16 +138,7 @@ let rec tick s () =
   );
 
   (* Evaluate dead people *)
-  let (hum, ai) = List.fold_left
-    (fun (hum, ai) p ->
-      if (Player.is_human p) && (Player.is_alive p) then
-        (hum + 1, ai)
-      else if (Player.is_ai p) && (Player.is_alive p) then
-        (hum, ai + 1)
-      else
-        (hum, ai)
-      )
-    (0,0) (Grid.players s.grid) in
+  let (hum, ai) = count_players s in
 
   if (rules s).game_over_handler hum ai then
     let () = send_all_players s End in
@@ -151,19 +154,24 @@ let rec tick s () =
     return () >>= (tick s)
 
 and start_ticking s () =
-  List.iter Player.reanimate (Grid.players s.grid);
+  let (hum, ai) = count_players s in
 
-  (* create phantom AI players *)
-  (while List.length (Grid.players s.grid) < 4 do
-    s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
-  done);
+  if hum > 0 then
+    let () = List.iter Player.reanimate (Grid.players s.grid) in
 
-  let () = send_all_players s Initial in
-  s.started <- true;
+    (* create phantom AI players *)
+    (while List.length (Grid.players s.grid) < 4 do
+      s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
+    done);
 
-  return () >>=
-    fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
-    >>= tick s
+    let () = send_all_players s Initial in
+
+    return () >>=
+      fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
+      >>= fun () -> s.started <- true; return ()
+      >>= tick s
+  else
+    return ()
 
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
