@@ -19,7 +19,7 @@ module Queue = struct
 end
 
 let max_val = function
-    [] -> failwith "empty list"
+  | [] -> failwith "empty list"
   | x::xs -> List.fold_left max x xs
 
 let rec index_list_of_maxes l index mv =
@@ -37,12 +37,15 @@ let rec direction_list l dl =
 
 let distance_list p g =
     let (ai_x, ai_y) = Player.position p in
+    let () = print_int ai_x;print_string ", ";print_int ai_y;print_string "\n" in
     let (pg_x,pg_y) = Grid.dimensions g in
     let (g_x, g_y) = (pg_x-1,pg_y-1) in
+    let () = print_int g_x;print_string ", ";print_int g_y;print_string "\n" in
+    let () = print_string "entering up\n" in
     let rec up_distance pos g =
       let curr = (ai_x,pos) in
       match Grid.status_of_cell g curr with
-      | Util.Player _ -> (pos-ai_y)
+      | Util.Player _ ->(pos-ai_y)
       | Util.Trail _ -> (pos-ai_y)
       | Util.Wall -> (g_y - ai_y)
       | Util.Empty -> up_distance (pos+1) g
@@ -71,8 +74,8 @@ let distance_list p g =
       | Util.Wall -> (g_x - ai_x)
       | Util.Empty -> right_distance (pos+1) g
       | Util.Food -> right_distance (pos+1) g (* We like food *) in
-    [(up_distance ai_y g);(down_distance ai_y g);
-    (left_distance ai_x g);(right_distance ai_x g);]
+    [(up_distance (ai_y+1) g);(down_distance (ai_y-1) g);
+    (left_distance (ai_x-1) g);(right_distance (ai_x+1) g);]
 
 let shortest_food_finder p g =
   (* let q = Queue.create () in *)
@@ -116,9 +119,8 @@ let do_djikstras_if_food_exists lst p g =
 let new_direction p g =
   let distances = distance_list p g in
   let () = print_int_list distances in
-  let () = print_string "hello\n" in
   let potential_field_hash = Pfield.create g in
-  let () = print_string "successful" in
+  let () = print_string "successful\n" in
   let potential_values = Pfield.direction_potentials p g potential_field_hash in
   let () = print_int_list potential_values in
   let maximums = sum_equal_lists distances potential_values in

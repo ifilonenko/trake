@@ -7,6 +7,7 @@ let check_and_add_if_true hash pos pid pot =
   else ()
 
 let add_potentials_to_hash p hash =
+  let () = print_string "entered\n" in
   let pid = Player.id p in
   let (ai_x, ai_y) = Player.position p in
   let tail = Player.tail p in
@@ -23,9 +24,11 @@ let add_potentials_to_hash p hash =
      (* Right *)
      check_and_add_if_true hash (ai_x+1,ai_y) pid (-20); in
   (* Same with tails *)
-  let () = List.nth (
-    List.map (fun pos -> add_to_hash hash pos pid (-20)) tail
-  ) 0 in
+  if (List.length tail > 0)
+  then
+    let () = List.nth (
+      List.map (fun pos -> add_to_hash hash pos pid (-20)) tail
+    ) 0 in
   let () = List.nth (
     List.map (fun pos ->
       let (x,y) = pos in

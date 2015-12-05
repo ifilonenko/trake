@@ -1,34 +1,22 @@
 open Assertions
 
-let grid = Grid.create (3,3)
-
-let g = Grid.create (3,10)
-let p = (Player.create_ai 0 (0,0,0))
+let grid = Grid.create (20, 20)
+let p = (Player.create_ai 5 (0,0,0))
 let rec print_int_list (input_list: int list) : unit =
   match input_list with
   | [] -> ()
   | h::t ->
     print_int h;print_string "\n";print_int_list t
 
-TEST_UNIT = Grid.dimensions grid === (3, 3)
-TEST_UNIT = Grid.status_of_cell grid (0, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 0) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (0, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 2) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (0, 1) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (2, 1) === Util.Wall
-TEST_UNIT = Grid.status_of_cell grid (1, 1) === Util.Empty
-TEST_UNIT = Ai.distance_list p g === [8;1;1;1]
+let () = print_string "down\n"
+TEST_UNIT = Player.direction p === Util.Down
 let new_grid = Grid.add_player grid p
-let () = Ai.new_direction p g
+let () = Ai.new_direction p new_grid
 TEST_UNIT = Player.direction p === Util.Up
-let () = print_string "here"
-let () = Ai.new_direction  p new_grid
-
-let new_grid = Grid.create (20, 20)
-TEST_UNIT = Grid.dimensions new_grid === (20, 20)
+let () = Grid.act new_grid
+let () = Ai.new_direction p new_grid
+TEST_UNIT = Player.direction p === Util.Up
+let () = print_string "up"
 let () = print_string "100% passed\n"
 (*
 let added_players = Grid.add_player new_grid
