@@ -21,9 +21,11 @@ type t = {
 let from_json_file path =
   let open Yojson.Basic.Util in
   let js = Yojson.Basic.from_file path in
-  let walls = convert_each (fun c -> (Util.cell_of_json c, Util.Wall)) (member "walls" js) in
+  let walls = convert_each (fun c -> (Util.cell_of_json c, Util.Wall)) 
+              (member "walls" js) in
   let dimensions = member "dimensions" js in
-  let dims = (dimensions |> member "cols" |> to_int, dimensions |> member "rows" |> to_int) in
+  let dims = (dimensions |> member "cols" |> to_int, dimensions |> 
+              member "rows" |> to_int) in
 
   {
     players = [];
@@ -75,7 +77,8 @@ let status_of_cell g c =
   let rec player_helper players =
     match players with
     | h::t -> if ((fst c) = (fst (Player.position h)) &&
-                 (snd c) = (snd (Player.position h))) then Util.Player (Player.id h)
+                 (snd c) = (snd (Player.position h))) then 
+                    Util.Player (Player.id h)
               else
                 player_helper t
     | [] -> trail_helper g.players
@@ -191,7 +194,8 @@ let rec spawn_food g =
     let () = Random.self_init() in
     let x = Random.int (fst g.dimensions) in
     let y = Random.int (snd g.dimensions) in
-    if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) else ()
+    if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) 
+    else ()
     )
 
 let players g =
@@ -204,12 +208,13 @@ let player_with_id g id =
   | _ -> None
 
 let prune_player g player =
-  let advance_and_kill player = let () = Player.advance player in Player.kill player in
+  let advance_and_kill player = let () = Player.add_score player SCORES.tick in
+                                let () = Player.advance player in 
+                                Player.kill player 
+  in
 
   let pos = Util.add_cells (Player.position player)
             (Util.vector_of_direction (Player.direction player)) in
-
-  Player.add_score player SCORES.tick;
 
   let status = status_of_cell g pos in
   match status with
@@ -229,4 +234,6 @@ let act g =
   List.iter (prune_player g) (players g);
 
   (* Advance all players *)
-  List.iter (fun p -> if (Player.is_alive p) then Player.advance p else ()) (players g);
+  List.iter (fun p -> if (Player.is_alive p) then 
+            let () = Player.add_score p SCORES.tick in Player.advance p 
+            else ()) (players g);
