@@ -42,3 +42,5 @@ let cell_of_json json =
     let y = List.assoc "y" l |> to_int in
     (x, y)
   | _ -> failwith "Invalid JSON for cell_of_json"
+
+let cell_to_tuple (x,y) = (x,y)
