@@ -145,7 +145,6 @@ let new_direction p g =
      and our goal is to maximize this objective function and return the direction
   *)
   let new_maximums = do_djikstras_if_food_exists maximums p g in
-  let () = print_int_list new_maximums in
   let directions = [Util.Down;Util.Up;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes new_maximums 0 (max_val new_maximums)) in
   (* Just in case there is a tie (which there wont in most cases) return first *)

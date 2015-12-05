@@ -12,7 +12,6 @@ let rec convert_grid_wall_to_list gwalls =
   | h::t -> (Util.cell_to_tuple (fst h))::(convert_grid_wall_to_list t)
 
 let add_potentials_to_hash grid_scale fcell gwalls p hash =
-  let () = print_string "entered\n" in
   let pid = Player.id p in
   let (ai_x, ai_y) = Player.position p in
   let tail = Player.tail p in
