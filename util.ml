@@ -33,3 +33,12 @@ let string_of_direction d =
 
 let json_of_cell (x, y) =
   `Assoc [("x", `Int x); ("y", `Int y)]
+
+let cell_of_json json =
+  let open Yojson.Basic.Util in
+  match json with
+  | `Assoc l ->
+    let x = List.assoc "x" l |> to_int in
+    let y = List.assoc "y" l |> to_int in
+    (x, y)
+  | _ -> failwith "Invalid JSON for cell_of_json"

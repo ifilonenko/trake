@@ -7,8 +7,25 @@ type t = {
     players: Player.t list;
 }
 
+(* the json file has a list of wall points and a key for dimensions *)
+(* {
+  walls: [[0, 0], ...]
+  dimensions: { cols: 20, rows: 20 }
+} *)
 let from_json_file path =
-  failwith "Unimplemented"
+  let open Yojson.Basic.Util in
+  let js = Yojson.Basic.from_file path in
+  let walls = convert_each (fun c -> (Util.cell_of_json c, Util.Wall)) (member "walls" js) in
+  let dimensions = member "dimensions" js in
+  let dims = (dimensions |> member "cols" |> to_int, dimensions |> member "rows" |> to_int) in
+
+  {
+    players = [];
+    food = None;
+    walls = walls;
+    dimensions = dims;
+  }
+
 
 let create dims =
   let (w, h) = dims in
