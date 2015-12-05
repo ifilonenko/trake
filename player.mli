@@ -21,7 +21,7 @@ val direction: t -> Util.direction
 (* Used for human players, when Game.t receives a message from this player to turn
  * it will call this function for the player instance
  *)
-val update_direction: t -> Util.direction -> unit
+val update_direction: t -> Util.direction -> bool
 
 (* Used for human players, when Game.t receives the command to start the game it
  * updates the position of the player
@@ -31,6 +31,7 @@ val update_position: t -> int * int -> unit
 (* tells if the player is currently alive or dead *)
 val is_alive: t -> bool
 val kill: t -> unit
+val reanimate: t -> unit
 
 (* Human readable name for this player *)
 val label: t -> string

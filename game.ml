@@ -138,13 +138,11 @@ let rec tick s () =
     (0,0) (Grid.players s.grid) in
 
   if (rules s).game_over_handler hum ai then
-  (* Game is over, reset and start a new one in 10s *)
     let () = send_all_players s End in
     s.grid <- Grid.reset s.grid;
     s.started <- false;
 
-    return () >>= fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
-      >>= (start_ticking s)
+    return () >>= (start_ticking s)
 
   else
     (* Send players new board *)
@@ -153,6 +151,8 @@ let rec tick s () =
     return () >>= (tick s)
 
 and start_ticking s () =
+  List.iter Player.reanimate (Grid.players s.grid);
+
   (* create phantom AI players *)
   (while List.length (Grid.players s.grid) < 4 do
     s.grid <- Grid.add_player s.grid (Player.create_ai (rules s).trail_length (255,0,0));
@@ -160,11 +160,15 @@ and start_ticking s () =
 
   let () = send_all_players s Initial in
   s.started <- true;
-  
-  return () >>= tick s
+
+  return () >>=
+    fun () -> Lwt_unix.sleep ((rules s).time_between_games /. (rules s).ticks_per_second)
+    >>= tick s
 
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
+    print_endline (Yojson.Basic.to_string content);
+
     let open Yojson.Basic.Util in
     match content with
     | `Assoc _ -> (
@@ -173,20 +177,19 @@ and receive_frame s id content =
       | Turn d ->
         let p = Grid.player_with_id (grid s) id in
         (match p with
-        | Some x -> Player.update_direction x d; send s id (message s id (Confirm s.started))
+        | Some x ->
+          let success = Player.update_direction x d in
+          send s id (message s id (Confirm (s.started && success)))
         | _ -> send s id (message s id (Confirm false)))
 
       | Join name ->
         let p = Player.create_human id (rules s).trail_length (0,0,0) name in
         s.grid <- Grid.add_player (grid s) p;
-        Player.kill p;
-
         let rtn = send s id (message s id (Confirm s.started)) in
-
         let () = (
           (* start game in 10 seconds after first player joins *)
           if List.length (Grid.players s.grid) = 1 then
-            let _ = Lwt_unix.sleep (rules s).time_between_games >>= (start_ticking s) in
+            let _ = start_ticking s () in
             ()
           else
             let _ = send s id (message s id Initial) in
@@ -228,12 +231,7 @@ let start s =
       | Opcode.Ping -> send (Frame.create ~opcode:Opcode.Pong ()) >>= response
       | Opcode.Text -> receive_frame s id (Yojson.Basic.from_string frame.content) >>= response
       | Opcode.Close ->
-        let p = Grid.player_with_id s.grid id in
-
-        (match p with
-        | Some x -> Player.kill x
-        | _ -> ());
-
+        s.grid <- (Grid.remove_player s.grid id);
         send (Frame.close 1000)
       | _ -> send (Frame.close 1002)
     in

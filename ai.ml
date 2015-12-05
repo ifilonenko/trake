@@ -140,5 +140,5 @@ let new_direction p g =
   let directions = [Util.Down;Util.Up;Util.Left;Util.Right] in
   let max_indexes = (index_list_of_maxes new_maximums 0 (max_val new_maximums)) in
   let best_direction = List.nth (direction_list max_indexes directions) 0 in
-  let () = Player.update_direction (p) (best_direction) in
+  let _ = Player.update_direction (p) (best_direction) in
   ()

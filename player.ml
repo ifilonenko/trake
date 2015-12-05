@@ -60,7 +60,14 @@ let direction p =
   p.direction
 
 let update_direction p d =
-  p.direction <- d
+  Util.(
+  match (p.direction, d) with
+  | (Left, Right)
+  | (Right, Left)
+  | (Down, Up)
+  | (Up, Down) -> false
+  | _ -> p.direction <- d; true
+  )
 
 let update_position p c =
   p.position <- c
@@ -71,6 +78,11 @@ let is_alive p =
 let kill p =
   p.tail <- [];
   p.alive <- false
+
+let reanimate p =
+  p.alive <- true;
+  p.tail <- [];
+  p.tail_length <- p.original_tail_length
 
 let label p =
   p.label
@@ -92,7 +104,6 @@ let eat_food p =
 
 let position p =
   p.position
-
 
 let to_json_update p =
   `Assoc [
