@@ -37,7 +37,6 @@ let rec direction_list l dl =
 
 let distance_list p g =
     let (ai_x, ai_y) = Player.position p in
-    let () = print_int ai_x;print_string ", ";print_int ai_y;print_string "\n" in
     let (pg_x,pg_y) = Grid.dimensions g in
     let (g_x, g_y) = (pg_x-1,pg_y-1) in
     let rec up_distance pos g =
