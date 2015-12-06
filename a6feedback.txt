@@ -1,0 +1,39 @@
+Summarize your solution
+-----------------------
+
+* What was your approach to solving the assignment?
+* Are there any known errors in your solution?
+
+Feedback on the assignment
+--------------------------
+
+* What was fun about the assignment?
+* What did you find especially hard?
+* How could the assignment be made more valuable?
+
+Teamwork
+--------
+
+Reflect on your role within your project team:
+
+* What were your primary technical contributions?  
+
+* What were your primary non-technical contributions?  
+  
+* Do you think other team members would want to work with you again?
+  
+* How could your own performance be improved the next time you
+  a part of a software development team?
+  
+Reflect on your team dynamic:
+
+* What worked well?  What went badly?
+
+* Did you develop a sense of trust and shared responsibility
+  within your team, or not?  Why?
+  
+Reflect on your experience:
+  
+* What have you learned about programming from this project?
+
+* What have you learned about teamwork from this project?
