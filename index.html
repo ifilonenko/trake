@@ -2,7 +2,13 @@
   <head>
     <style type="text/css">
     body {
+      display: flex;
+      margin: 0;
+    }
+    .game {
+      min-width: 640px;
       position: relative;
+      flex-grow: 1;
     }
     canvas {
       position: absolute;
@@ -10,9 +16,29 @@
       left: 50%;
       transform: translate(-50%,-50%);
     }
+    .sidebar {
+      width: 250px;
+      padding: 20px;
+      background: #f2f3f3;
+      display: flex;
+      flex-direction: column;
+      flex-grow: -1;
+    }
+    h1 {
+      font-size: 72px;
+      text-align: center;
+      margin-bottom: 0;
+    }
+    p {
+      text-align: center;
+    }
     #scoreboard {
+      margin-top: 100px;
       display: flex;
       flex-direction: column-reverse;
+      flex-grow: 1;
+      align-items: flex-start;
+      justify-content: flex-end;
     }
     #scoreboard .me {
       font-weight: bold;
@@ -20,14 +46,27 @@
     #scoreboard .dead {
       text-decoration: line-through;
     }
+    button {
+      height: 50px;
+      background: linear-gradient();
+    }
     </style>
   </head>
   <body>
-    <canvas id="grid" width="640" height="640"></canvas>
-    <ol id="scoreboard"></ol>
+    <div class="game">
+      <canvas id="grid" width="640" height="640"></canvas>
+    </div>
+    <div class="sidebar">
+      <h1>Trake</h1>
+      <p><strong>A 3110 project by</strong><br>
+      Alexander Zielenski<br>
+      Thomas Wong<br>
+      Ilan Filondz<br>
+      Eric Morris</p>
+      <ul id="scoreboard"></ul>
+      <button id="start" type="button" value="Start Game" onclick="startGame();">Start Game</button>
+    </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script type="text/javascript" src="trake.js"></script>
-    <button id="start" type="button" value="Start Game" onclick="startGame();">Start Game</button>
-
   </body>
 </html>
