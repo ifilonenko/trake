@@ -1,0 +1,1328 @@
+commit bf14df3961029f0b381bd6d5af8da9cbbad9494e
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 23:26:24 2015 -0500
+
+    fix ai crash stopping game
+
+ game.ml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 8dc76ff53232b8e0fd4d98d5f051f18146289ca9
+Merge: 6b5b0e2 73290e2
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 23:22:40 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 6b5b0e2e77b55c298c242c71098a5b1230b8b769
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 23:22:33 2015 -0500
+
+    Scoreboard
+
+ index.html | 15 ++++++++++++---
+ trake.js   | 34 ++++++++++++++++++++++++++--------
+ 2 files changed, 38 insertions(+), 11 deletions(-)
+
+commit 73290e2bad1d913d7709e3029aa56dc96a1e0a8f
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 23:17:10 2015 -0500
+
+    removed djikstras
+
+ ai.ml  | 34 ----------------------------------
+ ai.mli | 10 ----------
+ 2 files changed, 44 deletions(-)
+
+commit 77384d428198e1e4903cc189c14e39b7f33da00d
+Merge: 307562f 4f90f14
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 21:38:23 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 307562fb3c6367566158006426f73f09a3397b99
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 21:38:08 2015 -0500
+
+    fixed test cases
+
+ test_human.ml | 50 +++++++++++++-------------------------------------
+ 1 file changed, 13 insertions(+), 37 deletions(-)
+
+commit 4f90f141b2ea82fb7247cc9675d71e9450a37901
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 21:34:15 2015 -0500
+
+    fix merge issue with start button
+
+ trake.js | 74 +++++++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 40 insertions(+), 34 deletions(-)
+
+commit 7d23835b9aa21808c879c612de4cf11a7933c743
+Merge: 3c8d8df a7b33a8
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 21:27:47 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+    
+    Conflicts:
+    	trake.js
+
+commit 3c8d8dff46429077929b5bf0f194ee41ebb9a817
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 21:26:00 2015 -0500
+
+    Fix wall bug and end condition
+
+ index.html |   2 +-
+ trake.js   | 118 ++++++++++++++++++++++++++++++-------------------------------
+ trake.ml   |   2 +-
+ 3 files changed, 61 insertions(+), 61 deletions(-)
+
+commit a7b33a895d6e9cf3a03a66c4dc9ed054490b7033
+Merge: 8ace9e4 99411cd
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 21:22:03 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 8ace9e4d9da2578d592a614bc237580a2511bfb4
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 21:21:57 2015 -0500
+
+    add new tests
+
+ test_human.ml | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+commit 7c65f3ebbdf61dd866cc9f7b9675380d1e54c97c
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 21:21:50 2015 -0500
+
+    kill players on collision
+
+ grid.ml | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 99411cdb5fb48fabbf137f85939cbcbf2b24a9b2
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 21:01:48 2015 -0500
+
+    direction queue
+
+ player.ml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit f9c6e2b309579c5def94745db2348e10399088f3
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 20:58:14 2015 -0500
+
+    start game
+
+ game.ml    | 21 ++++++++----------
+ grid.ml    | 12 ++++-------
+ index.html |  5 +++--
+ trake.js   | 73 ++++++++++++++++++++++++++++++++++++--------------------------
+ 4 files changed, 58 insertions(+), 53 deletions(-)
+
+commit f11705041a6522d9665c9f70f3e71a0680280029
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 17:44:06 2015 -0500
+
+    dont kill from dead trail
+
+ grid.ml | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+commit 620a37f17559d258b5101f2f96d7e5ec52d6b2bd
+Merge: fce2ae5 3969e95
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 17:34:25 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit fce2ae52c165cd79fa11acd31b4489a9ac3ebc7d
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 17:34:22 2015 -0500
+
+    dont add players to the grid until they are actually in it
+
+ game.ml | 41 ++++++++++++++++++++++++-----------------
+ grid.ml |  9 ++++-----
+ 2 files changed, 28 insertions(+), 22 deletions(-)
+
+commit 3969e951ad834c78bfb68700ae665e0fbe33cf5c
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:27:42 2015 -0500
+
+    readme
+
+ README.txt | Bin 0 -> 443684 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 6e1b31876acfe2bbd0a01675e41922f44adb1e9d
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:16:42 2015 -0500
+
+    combined tests for a test_ai
+
+ test_ai.ml | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+
+commit d569e6519dd5e4de58d5794fd9670e458df56896
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:16:17 2015 -0500
+
+    simpified code
+
+ grid.ml       | 11 +++++------
+ test_human.ml |  2 +-
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+commit 911583687aac6a97d0a1d13d66312a3e8f9a8d69
+Merge: bb85e4d a126f6a
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:07:17 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit bb85e4deae526d81d2c55614835a50a004d2585d
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:07:09 2015 -0500
+
+    fixed dead players moving and gaining points
+
+ grid.ml | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+commit c2a4df4525fd3a3d0c35841b12d23a107387a840
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 17:06:53 2015 -0500
+
+    added and fixed test cases
+
+ test_human.ml | 66 +++++++++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 53 insertions(+), 13 deletions(-)
+
+commit a126f6a87ffab7a2324f9d0f5cdb6f4c4d4860f5
+Merge: 0a7807d 822074b
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 16:24:51 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 0a7807da6e483f398625f6ec9c8812d32229313e
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 16:24:42 2015 -0500
+
+    idk man, i fixed some stuff?
+
+ game.ml  | 63 +++++++++++++++++++++++++++++++--------------------------------
+ grid.ml  |  4 +++-
+ trake.ml |  2 +-
+ 3 files changed, 35 insertions(+), 34 deletions(-)
+
+commit 822074b2ac26c9936f4c3e610f3323624ab52cc0
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 16:08:02 2015 -0500
+
+    comment
+
+ trake.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit c278b5b394cd6afdc6a09980b11aa24148336400
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 15:42:57 2015 -0500
+
+    start a new game if human players, not total players is 1
+
+ game.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit e8b2d92de2257985dc0b062dd795e6811e45d87d
+Merge: b0a9173 174e914
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 15:39:58 2015 -0500
+
+    Merge branch 'master' of http://git.alexzielenski.com/cs3110/project
+
+commit 174e914867c741a805c283d2cfb2e9c7b924d38c
+Merge: f287ccd 3df04b6
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 15:39:02 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit f287ccdc3ef46f22ea0b2590b90cc70e8c0c3ffe
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 15:38:56 2015 -0500
+
+    Fix dead player bug
+
+ trake.js | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit b0a917390071a4662c57e1dca01ece4c74a81c82
+Merge: 2696658 3df04b6
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 15:29:04 2015 -0500
+
+    Merge branch 'master' of http://git.alexzielenski.com/cs3110/project
+
+commit 3df04b688384f0862814d24cde1120024f68bc91
+Merge: 27c223f d74a59c
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 15:21:46 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+    
+    # Conflicts:
+    #	grid.ml
+
+commit 26966581d19b9083016778ead8cf859c914bf380
+Merge: ea827e6 d74a59c
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 15:20:29 2015 -0500
+
+    Merge branch 'master' of http://git.alexzielenski.com/cs3110/project
+
+commit d74a59c6237d1a570acbc8e678dd203c48d450ca
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 15:19:15 2015 -0500
+
+    better game restarts
+
+ game.ml | 48 ++++++++++++++++++++++++++++--------------------
+ grid.ml | 11 ++++++-----
+ 2 files changed, 34 insertions(+), 25 deletions(-)
+
+commit 27c223f5cf8b3e061bab944094b9617886b53761
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 15:19:05 2015 -0500
+
+    fixed 80 char limit, dead players getting points for tick
+
+ grid.ml | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+commit b7fb42d9be1f80c9df00a8a68644f3d0074a36da
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 15:18:33 2015 -0500
+
+    added more test cases
+
+ test_human.ml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit b7cd7b59e4fdff32ee209d6cda54f0ef928df577
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Sat Dec 5 15:18:06 2015 -0500
+
+    added test cases
+
+ test_human.ml | 172 ++++++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 142 insertions(+), 30 deletions(-)
+
+commit ea827e69cea93114f5bc9c56332bfc1e321ca335
+Merge: 6367415 2ae9616
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 15:12:07 2015 -0500
+
+    resolved merge conflict
+
+commit 636741598e9ce319ae2acbb2210f9dde7535548e
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 15:11:26 2015 -0500
+
+    changed trake settings
+
+ trake.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2ae9616811cb2fb93ad07b50e10f969363317a6c
+Merge: 43f4af8 0475c4f
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 15:05:54 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 43f4af8aad6b7dfdf8fc2ee6f3491b7bea6eb07c
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 15:05:51 2015 -0500
+
+    game restarts
+
+ ai.ml      |   4 +--
+ game.ml    |  30 +++++++++---------
+ grid.ml    | 103 +++++++++++++++++++++++++++++++++++--------------------------
+ grid.mli   |   2 ++
+ player.ml  |  15 +++++++--
+ player.mli |   3 +-
+ trake.ml   |   2 +-
+ 7 files changed, 93 insertions(+), 66 deletions(-)
+
+commit 0475c4f0437f30a2ccf45f84a91eada5cd03e63d
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 14:26:53 2015 -0500
+
+    forgot to take out initial coord
+
+ ai.ml | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 16998a8d254dc10d45115d262e01b47a9dc5868e
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 14:25:14 2015 -0500
+
+    removed logs used to check result of AI
+
+ ai.ml     | 1 -
+ pfield.ml | 1 -
+ 2 files changed, 2 deletions(-)
+
+commit 3b6c1a286f708de1062b87762902be88180b1fc4
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 14:23:06 2015 -0500
+
+    commented code
+
+ ai.ml      | 12 +++++++++++-
+ ai.mli     | 12 ++++++++----
+ pfield.mli |  8 ++++----
+ 3 files changed, 23 insertions(+), 9 deletions(-)
+
+commit 0bb56fb148856a8119954a34ed594b88d7278ebc
+Merge: 621371d 5c2b76d
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 14:16:17 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 621371d640f445371f0f1215dd16e5db278a6b1b
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 14:16:12 2015 -0500
+
+    game restarts
+
+ game.ml    | 16 ++++++++++++----
+ game.mli   |  2 ++
+ grid.ml    |  7 +++++++
+ grid.mli   |  3 +++
+ player.ml  |  9 +++++++++
+ player.mli |  2 ++
+ trake.ml   |  8 +++++++-
+ 7 files changed, 42 insertions(+), 5 deletions(-)
+
+commit 5c2b76d1e526762cf53c07bda33e6f6b353b18fa
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 14:03:11 2015 -0500
+
+    small AI changes
+
+ ai.ml    | 4 +++-
+ trake.ml | 4 ++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+commit 03eac5c25ea7f0deea36ab692aa0b2e0a6ecf00f
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 13:52:49 2015 -0500
+
+    ai slightly refactored
+
+ ai.ml    | 2 +-
+ trake.ml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit bd809ac8cedc6759db24f1dc75b5e3f485c6ce1b
+Merge: 9a2b2af 03b21bf
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 13:50:55 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 9a2b2af52b27505af2b0990f1db08b90049455de
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 13:50:38 2015 -0500
+
+    Fix player death a bit
+
+ index.html |  2 +-
+ trake.js   | 20 ++++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
+
+commit 03b21bf95d760a62ef03578b1f5e407e5cb3e4ce
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 13:42:26 2015 -0500
+
+    up is up and down is down
+
+ util.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0475ae4186e7bdf5055a6eaa5143d1b3d5d521c7
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 13:42:20 2015 -0500
+
+    kill subsequent players on join if game is already in progress
+
+ game.ml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit af0a0eb007e97318ab0f3ccb5af775a795b478c0
+Merge: 1997b45 5ce8fda
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 13:28:28 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 1997b45e66dc6c7f6cba921959730c72aa951a70
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Sat Dec 5 13:28:08 2015 -0500
+
+    Add keypress listeners
+
+ trake.js | 278 ++++++++-------------------------------------------------------
+ 1 file changed, 34 insertions(+), 244 deletions(-)
+
+commit 5ce8fdacc6532d2d9f3143bffd212355a6545e4e
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 13:22:01 2015 -0500
+
+    added shortest distance to AI calculation
+
+ ai.ml    | 20 +++++++++++++++++---
+ trake.ml |  2 +-
+ 2 files changed, 18 insertions(+), 4 deletions(-)
+
+commit 1a46eceb9868cd2eaa919d0fe9d71c1ff8bc28aa
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 13:02:45 2015 -0500
+
+    stop the game if there is 1 human and no AI or 2 AI and no human.
+
+ game.ml | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+commit 46c997580e2bb049efb0694f290dff42c570b113
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 12:49:36 2015 -0500
+
+    silence warning
+
+ grid.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1ffe848fbb706467e0860ba03a15ecc3ad1cef5b
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 12:39:36 2015 -0500
+
+    send score in socket updates
+
+ player.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 66c25675f740b367a73fe2320a5379edaae23f75
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 12:39:05 2015 -0500
+
+    add scoring
+
+ game.ml    | 20 +++++++++++++-------
+ grid.ml    | 24 ++++++++++++++++++++----
+ player.ml  | 10 ++++++++++
+ player.mli |  3 +++
+ util.ml    |  3 +++
+ util.mli   |  1 +
+ 6 files changed, 50 insertions(+), 11 deletions(-)
+
+commit 36bf58088a95ad61eb5e19a8afa95ba9a3e6e2cc
+Merge: 4f29ae1 22b702b
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 12:09:34 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+    
+    # Conflicts:
+    #	util.ml
+    #	util.mli
+
+commit 4f29ae165423d49ea193c0f66b6af6bf7722b641
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sat Dec 5 12:08:38 2015 -0500
+
+    create grid from json
+
+ grid.ml  | 19 ++++++++++++++++++-
+ util.ml  |  9 +++++++++
+ util.mli |  1 +
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+
+commit 22b702b9145d61bad6fe8a02947dc4696e9993e3
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 01:57:27 2015 -0500
+
+    make game more interesting by adding more length, ticks, and probability
+
+ trake.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e0635f3ce90e855ac68af3a70b1129a0abe71e50
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 01:48:47 2015 -0500
+
+    added potential field around walls
+
+ pfield.ml  | 26 ++++++++++++++++++++------
+ pfield.mli |  5 ++++-
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+commit 1887401337a9bc7d8537cf6cf8a58e32f09f824c
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Sat Dec 5 01:25:35 2015 -0500
+
+    ai is not eating food
+
+ ai.ml      |  2 +-
+ pfield.ml  | 25 ++++++++++++++++++-------
+ pfield.mli |  4 ++--
+ util.ml    |  2 ++
+ util.mli   |  2 ++
+ 5 files changed, 25 insertions(+), 10 deletions(-)
+
+commit 79ba8d6388c045ae82898b1123fff9cba84620b1
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Fri Dec 4 23:46:45 2015 -0500
+
+    scaled with grid size
+
+ pfield.ml  | 47 +++++++++++++++++++++++++----------------------
+ pfield.mli |  8 ++++----
+ 2 files changed, 29 insertions(+), 26 deletions(-)
+
+commit 91c7aef1c54e0c3e6c8803afc160eea2258a79f6
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Fri Dec 4 23:22:15 2015 -0500
+
+    smarter ai that works, pre-djikstras
+
+ ai.ml      |  7 +------
+ pfield.ml  | 31 +++++++++++++++++++++++++------
+ pfield.mli |  8 +++++++-
+ test.ml    | 25 +++++++++++++++++++------
+ 4 files changed, 52 insertions(+), 19 deletions(-)
+
+commit 1c19729bd984c90e038b5ec3e9e9e483529619e3
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Fri Dec 4 21:34:05 2015 -0500
+
+    ai works but requires testing
+
+ ai.ml     | 14 ++++++++------
+ pfield.ml |  9 ++++++---
+ test.ml   | 30 +++++++++---------------------
+ 3 files changed, 23 insertions(+), 30 deletions(-)
+
+commit 5e268feee04f32facf612aab5db75668cc1f7810
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Fri Dec 4 20:56:03 2015 -0500
+
+    refactored ai code
+
+ ai.ml    | 19 +++++++++++++++----
+ ai.mli   |  6 ++++++
+ grid.ml  | 13 ++++++++-----
+ grid.mli |  4 ++++
+ 4 files changed, 33 insertions(+), 9 deletions(-)
+
+commit 991df7f0638567fa306b5625b3afdc6ec6bc253d
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Fri Dec 4 13:51:43 2015 -0500
+
+    added tests for dead players don't move
+
+ test_human.ml | 25 +++----------------------
+ 1 file changed, 3 insertions(+), 22 deletions(-)
+
+commit a172cde2ba24ccd239972e72512bf8d18f5a4500
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Fri Dec 4 13:51:22 2015 -0500
+
+    uncommented grid_size, fixed creating walls, fixed advancing
+
+ grid.ml  | 16 ++++++++++------
+ grid.mli |  2 ++
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+commit 27e55eed506927b2871b00e3b9c0a0db50da705f
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Thu Dec 3 16:52:28 2015 -0500
+
+    issues with AI, seems to be overflow error
+
+ ai.ml      | 11 +++++++++++
+ ai.mli     |  9 ++++++++-
+ pfield.ml  | 13 +++++++++----
+ pfield.mli |  3 +--
+ test.ml    |  8 +++++---
+ 5 files changed, 34 insertions(+), 10 deletions(-)
+
+commit a03292d2f68a05c57a2ae858b9de43e75fdb6b62
+Merge: 53d55eb 7470b88
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Thu Dec 3 16:10:48 2015 -0500
+
+    Merge branch 'master' of http://git.alexzielenski.com/cs3110/project
+
+commit 53d55eba0d8a2471b5f4781acaf37ee2129b2188
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Thu Dec 3 16:10:44 2015 -0500
+
+    AI has potential fields added to it
+
+ ai.ml      | 118 ++++++++++++++++++++++++++++++++++++++++---------------------
+ ai.mli     |  12 +++++++
+ pfield.ml  |  93 ++++++++++++++++++++++++++++++++++++++++++++++++
+ pfield.mli |  45 +++++++++++++++++++++++
+ test.ml    |   2 +-
+ 5 files changed, 228 insertions(+), 42 deletions(-)
+
+commit 7470b8807e979442334a9e6d5a6cbdaa4159ab68
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 01:33:11 2015 -0500
+
+    send initial grid after confirmation
+
+ game.ml | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit 78f289ae84ffb15bc0a637743384055e957b3656
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 01:30:32 2015 -0500
+
+    send initial grid on rejoin
+
+ game.ml | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
+
+commit a6e7fb72c9a324bc949a3da832f83e8de002a19b
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 01:14:10 2015 -0500
+
+    tick 1/sec and hook up UI for refresh
+
+ trake.js | 36 ++++++++++++++++++++++--------------
+ trake.ml |  2 +-
+ 2 files changed, 23 insertions(+), 15 deletions(-)
+
+commit e47905d5ef3c3a22961f4d221a732176c6af7b1f
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 01:13:47 2015 -0500
+
+    send alive in updates
+
+ player.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit deca78b5548f1383b6acb11a481221d0e367b802
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 01:11:04 2015 -0500
+
+    fix vector_of_direction
+
+ util.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit d0fff65f5a4f6fca7d56bb5a74f9789ef4217c25
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:58:13 2015 -0500
+
+    dont send initial players in updates
+
+ grid.ml | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+commit 73da4a5a63361115c57cc4c7bdab17327914f2be
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:52:58 2015 -0500
+
+    dont keep spawning food or moving dead players
+
+ grid.ml | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit c3668862ed2b7cda43b5556bafed6d899614519d
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:52:50 2015 -0500
+
+    make default grid 20x20
+
+ trake.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 53d27461b2557c90aea505690984e582b05f54d7
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:45:58 2015 -0500
+
+    finally get server sending grid to client
+
+ game.ml | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+commit ce12b5084aff81fca8bf0c09d329db8140f66dc5
+Merge: d63e040 a7340a5
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Thu Dec 3 00:26:17 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit d63e040bd43d4805ef4215f617e90821f4031ef8
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Thu Dec 3 00:25:50 2015 -0500
+
+    test occupies_cell
+
+ test_human.ml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 22a932c0b1e2a0d0776a956e8b6269245c5e548f
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Thu Dec 3 00:25:35 2015 -0500
+
+    grid to json
+
+ grid.ml | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+commit a7340a540541ac6429316e8ef87eaebe81296115
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:08:35 2015 -0500
+
+    move AI players each tick
+
+ game.ml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit cf121d058013dc508bdbf33a225bc4c18aee5098
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:08:26 2015 -0500
+
+    fix compilation error with food
+
+ grid.ml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 24e8045b21bee09fd05088998e1a93a6b327f068
+Merge: 256f8bd 6ded675
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:01:33 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 256f8bd48a969784b3459eab6535d4ff5c363ee5
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Dec 3 00:01:02 2015 -0500
+
+    send initial board and updates
+
+ game.ml | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 6ded6758cb299ab6758244d995ed152ae79b0cad
+Merge: 1bc5077 51fe29e
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Wed Dec 2 23:56:28 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 1bc50775b999afd545efba80d19bcf08a16d4ba6
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Wed Dec 2 23:56:16 2015 -0500
+
+    implemented spawn food
+
+ grid.ml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 51fe29e80fb2ea19c91b13331b9fb4d87edae62c
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 23:55:27 2015 -0500
+
+    player json parsing
+
+ game.ml    | 32 +++++++++++++++++++++++++++-----
+ grid.ml    |  5 ++++-
+ grid.mli   |  3 ++-
+ player.ml  | 34 +++++++++++++++++++++++++++-------
+ player.mli |  9 +++++----
+ util.ml    |  3 +++
+ util.mli   |  2 ++
+ 7 files changed, 70 insertions(+), 18 deletions(-)
+
+commit a9ab5c7d2aad36a2b788a18dcd129778108bb718
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 23:16:40 2015 -0500
+
+    better server error checking
+
+ game.ml  | 33 +++++++++++++++++++++------------
+ trake.js |  2 ++
+ 2 files changed, 23 insertions(+), 12 deletions(-)
+
+commit e448390344a3ae2c07094e14604fedcd57c3ac80
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 23:07:43 2015 -0500
+
+    fix confirmation
+
+ game.ml | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+commit 1a01173ee118cf8c34a602400b4ee10a680ebc85
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 23:03:43 2015 -0500
+
+    fix compilation
+
+ game.ml  | 2 +-
+ trake.js | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 9fc41599899f4ab0b1eff12b277584a22863bf83
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 23:01:50 2015 -0500
+
+    server responds with confirmation
+
+ game.ml  | 78 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ game.mli |  2 +-
+ grid.ml  |  9 ++++++--
+ grid.mli |  3 +++
+ trake.js |  9 ++++----
+ trake.ml |  4 +---
+ util.ml  | 21 ++++++++++++++++-
+ util.mli |  5 ++++-
+ web.ml   |  3 ---
+ 9 files changed, 105 insertions(+), 29 deletions(-)
+
+commit 2c889a9d10123a7bbdb6e7bd830a5654707e011f
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Dec 2 21:42:32 2015 -0500
+
+    add websocket connection to client
+
+ game.ml        | 16 ++++++----------
+ game.mli       |  2 +-
+ test_socket.js |  2 +-
+ trake.js       | 21 +++++++++++++++++++++
+ trake.ml       |  3 +++
+ 5 files changed, 32 insertions(+), 12 deletions(-)
+
+commit ed63476b443f5a306c95c48158c83953dc4384da
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Wed Dec 2 17:38:52 2015 -0500
+
+    Add update functions
+
+ trake.js | 286 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 261 insertions(+), 25 deletions(-)
+
+commit 953f25ad273ee974e55eb166e6df0017f37a16c4
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Wed Dec 2 16:28:31 2015 -0500
+
+    Update default grid size and add proposed protocols
+
+ index.html |   2 +-
+ trake.js   | 170 +++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 132 insertions(+), 40 deletions(-)
+
+commit 26cff224111719fca226298dcac2bcca463477ed
+Author: Eric Morris <elm232@cornell.edu>
+Date:   Wed Dec 2 15:08:55 2015 -0500
+
+    Bootstrap UI
+
+ index.html | 23 +++++++++++++++++
+ trake.js   | 85 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
+
+commit 39bdd30d8d1c72bc44fbbe8b4f98a493c3a5bacc
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 02:41:10 2015 -0500
+
+    added a ton of test cases
+
+ test_human.ml | 77 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+commit db7e55a41a36c295a27b6bdb64e1658ce5b4842f
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 02:41:00 2015 -0500
+
+    switched the order from advance, prune to prune, advance
+
+ grid.ml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit d5f3c6ce2a4b07cc6843957d5754d473ade8250b
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 02:40:40 2015 -0500
+
+    fixed calculating tail and advancing
+
+ player.ml | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+commit c61e7b66cc058ead3a5128ae5a00a57e6281cf85
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 02:40:13 2015 -0500
+
+    fixed util
+
+ ai.ml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 00554be9e139a345df2afadb7fe51f7f8ea6608d
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:32:46 2015 -0500
+
+    fixed Util
+
+ ai.ml | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+commit 21e11e9261dcdf7b17422d6078019751253b88a1
+Merge: a2fefb6 75cf1d7
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:28:29 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit a2fefb616b8735c0f71c002f87672566910833bc
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:26:14 2015 -0500
+
+    added lots of test cases for players, changed name to not conflict with test cases for AI
+
+ test_human.ml | 498 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 498 insertions(+)
+
+commit 21f6a63ae9128955cc0706f2d015deb43724e7b0
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:25:50 2015 -0500
+
+    fixed vector directions
+
+ util.ml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit a759bd643e27431a55a8525c463c7bd8086da594
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:25:39 2015 -0500
+
+    implemented Random generated spawn, fixed prune to not kill itself
+
+ grid.ml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 6486ba8ad877868b39b564699a6e917374de41de
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Tue Dec 1 00:25:06 2015 -0500
+
+    implemented create_human, fixed calculating new tail
+
+ player.ml | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+commit 75cf1d7dd81c27bad5ccda98b4cb83e3e9899432
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 21:23:29 2015 -0500
+
+    tests now pass completely in terms of the walls, need to try food and other stuff
+
+ test.ml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 1c9b1d0732559bd0f561e06e9bf1da18ca96e209
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 21:16:13 2015 -0500
+
+    fixing test.ml
+
+ test.ml | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 53876cef5d2c6835d288b8d90f132cbdcdfe0dc0
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 21:15:00 2015 -0500
+
+    fixed util problems
+
+ grid.ml   | 39 +++++++++++++++++++--------------------
+ player.ml |  2 +-
+ 2 files changed, 20 insertions(+), 21 deletions(-)
+
+commit b085e0924ded1ce616a29cb0a6da932767ac34f0
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 21:05:09 2015 -0500
+
+    change to Util in test
+
+ test.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 77fc587801e21e276cbb822f0b63558cb53cc4f5
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 21:03:49 2015 -0500
+
+    AI refactored. grid still not working
+
+ ai.ml   | 2 +-
+ test.ml | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 7709fad453e7e91120a713ac7db421989c1de68e
+Merge: 36fa8f4 6fc1282
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 20:59:17 2015 -0500
+
+    merge conflicts
+
+commit 6fc1282e4436df4b5b91d258c9f3e21d856db9f1
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 20:53:27 2015 -0500
+
+    updated basic tests
+
+ test.ml | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+commit 3c8cc2a28fc04a29e961bdc6b8d7c2209a7b46e5
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 20:53:10 2015 -0500
+
+    fixed mli file and changed player to reflect util
+
+ player.ml  | 17 +++--------------
+ player.mli | 28 ++++++++++++++++------------
+ 2 files changed, 19 insertions(+), 26 deletions(-)
+
+commit a304bb3157c41f395aeaa7bfbb95deef3c576fac
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 20:52:48 2015 -0500
+
+    fixed grid so it used util, added a precondition to create, and fixed mli file
+
+ grid.ml  | 44 ++++++++++++++++++++++----------------------
+ grid.mli | 42 +++++++++++++++++++-----------------------
+ 2 files changed, 41 insertions(+), 45 deletions(-)
+
+commit 376ef2a06205703a9ab1c6011c9d8bbaaa5e5c1e
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 20:51:54 2015 -0500
+
+    added util to avoid circular dependencies
+
+ util.ml  | 13 +++++++++++++
+ util.mli | 22 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+
+commit 36fa8f48b5b2e29cad7cf304fef7f98e89c86ef4
+Merge: c013403 caaac3e
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 20:41:44 2015 -0500
+
+    merge conflicts on test.ml
+
+commit c013403b501c22f7b791a1cc8a61d733824f3a1e
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 20:26:23 2015 -0500
+
+    tested and AI works for walls
+
+ ai.ml     | 43 +++++++++++++++++--------------------------
+ ai.mli    |  3 +--
+ grid.mli  |  2 +-
+ player.ml | 12 +++++++++++-
+ test.ml   | 21 ++++++++++++++++-----
+ 5 files changed, 46 insertions(+), 35 deletions(-)
+
+commit caaac3e37c66a29028c212daece4e278034ca0d4
+Merge: 340c441 493d43f
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 19:12:43 2015 -0500
+
+    Merge branch 'master' of ssh://ftp.alexzielenski.com:57110/cs3110/project
+
+commit 340c441035a2757256bb929c45e9830f5752c630
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 19:12:25 2015 -0500
+
+    changed methods to reflect change to Trail, fixed 80 char lines
+
+ grid.ml | 22 ++++++++++++++--------
+ test.ml | 12 +++++++++++-
+ 2 files changed, 25 insertions(+), 9 deletions(-)
+
+commit 493d43f0bee9551cc723c14310f064a790ea68b6
+Author: Ilan Filonenko <ifilondz@gmail.com>
+Date:   Mon Nov 30 19:06:04 2015 -0500
+
+    naive interpretation of AI
+
+ ai.ml    | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ai.mli   | 21 +++++++++++++++++
+ grid.mli |  2 +-
+ 3 files changed, 104 insertions(+), 1 deletion(-)
+
+commit 37589f93c5e470ccb5ea4fb968b578dc153467b4
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 17:21:37 2015 -0500
+
+    fixed some parts of the game
+
+ grid.ml    | 117 +++++++++++++++++++++++++++++++++++++++++++++++++------------
+ grid.mli   |   2 +-
+ player.ml  |   3 ++
+ player.mli |   5 ++-
+ 4 files changed, 102 insertions(+), 25 deletions(-)
+
+commit 4686eee55022547b0838b7924b90b801df742881
+Author: thomas wong <thomascwong1996@gmail.com>
+Date:   Mon Nov 30 17:21:24 2015 -0500
+
+    added tests
+
+ test.ml | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+commit 7b283ed5791844b2e3243660c809fab91198d6b3
+Author: Alexander Zielenski <alex@alexzielenski.com>
+Date:   Fri Nov 27 22:43:13 2015 -0500
+
+    convert things to mutable and add installation cmd
+
+ game.ml   | 21 +++++++++------------
+ grid.ml   | 23 ++++++++++++++++++++---
+ player.ml | 50 ++++++++++++++++++++++----------------------------
+ trake.ml  |  1 +
+ 4 files changed, 52 insertions(+), 43 deletions(-)
+
+commit 0f8ececb05dc276f370f489750949f626963ff53
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Sun Nov 15 13:46:14 2015 -0500
+
+    start ticking
+
+ game.ml    | 104 ++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ game.mli   |  15 ++++++---
+ grid.ml    |  58 ++++++++++++++++++++++++++++++++++
+ grid.mli   |  66 ++++++++-------------------------------
+ main.ml    |   5 ---
+ player.ml  | 103 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ player.mli |  40 ++++++++++++------------
+ server.ml  |   7 +++++
+ tests.ml   |   0
+ trake.ml   |   7 +++++
+ web.ml     |   3 ++
+ 11 files changed, 303 insertions(+), 105 deletions(-)
+
+commit c3a3b006284c750681ba9ba2feaa1044c03b1585
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Nov 12 18:42:13 2015 -0500
+
+    make grids not own players
+
+ game.ml    |  3 +++
+ game.mli   |  3 +++
+ grid.mli   | 11 ++++-------
+ player.mli |  6 ++++++
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
+commit f4bebc9889de3d9be9dbf52bb5b87ae97fc572df
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Thu Nov 12 13:21:14 2015 -0500
+
+    refine mlis
+
+ game.ml    |  1 +
+ main.ml    |  2 +-
+ player.mli | 21 ++++++++++++++++-----
+ server.mli | 10 ++++++++--
+ 4 files changed, 26 insertions(+), 8 deletions(-)
+
+commit f280d90faf3c9314fff583457d744a3a192636f2
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Nov 11 13:26:41 2015 -0500
+
+    move direction to Player
+
+ grid.mli   | 9 +++------
+ player.mli | 7 +++++--
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+commit e79f5aff2d1c842ea7f3add6be630052d5f274cb
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Wed Nov 11 13:25:15 2015 -0500
+
+    touch up mli files
+
+ game.ml    |  3 +++
+ game.mli   | 11 ++++++++---
+ grid.mli   | 51 +++++++++++++++++++++++++++++++++++++++++----------
+ main.ml    |  4 +++-
+ player.mli | 18 +++++++++++++++++-
+ server.mli |  4 +++-
+ 6 files changed, 75 insertions(+), 16 deletions(-)
+
+commit 985253b4bc6467bc950af3878c5d374fb9b48533
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Tue Nov 10 21:14:32 2015 -0500
+
+    repurpose server
+
+ game.ml    | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ game.mli   | 13 +++++++++++--
+ grid.mli   |  4 ++--
+ main.ml    | 33 ++-------------------------------
+ server.mli | 14 +-------------
+ 5 files changed, 69 insertions(+), 48 deletions(-)
+
+commit f9b5289c12881a193319d479c0d9aa513e4745a7
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Tue Nov 10 19:28:46 2015 -0500
+
+    run the ocaml socket on 0.0.0.0
+
+ main.ml        | 2 +-
+ test_socket.js | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit e18a1e05376292eb2a27f79da5d50627e3985232
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Tue Nov 10 19:24:32 2015 -0500
+
+    refine mli files a bit
+
+ game.mli   | 11 +++--------
+ grid.mli   | 36 ++++++++++++++++++++++++++++++++++++
+ player.mli | 13 +++++++++++++
+ server.mli | 13 +++++++++++++
+ 4 files changed, 65 insertions(+), 8 deletions(-)
+
+commit e4e759edbe82e2bb584fbe4cb89c3f79d1a173b4
+Author: Alex Zielenski <alex@alexzielenski.com>
+Date:   Tue Nov 10 18:14:55 2015 -0500
+
+    initial commit
+
+ .gitignore     |  3 +++
+ game.mli       | 15 +++++++++++++++
+ grid.mli       | 34 ++++++++++++++++++++++++++++++++++
+ main.ml        | 32 ++++++++++++++++++++++++++++++++
+ player.mli     |  4 ++++
+ server.mli     |  0
+ test_socket.js | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 131 insertions(+)
