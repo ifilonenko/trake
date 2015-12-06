@@ -212,38 +212,44 @@ function startGame(event) {
   client.send(JSON.stringify({type: "start"}));
 }
 
-client.onerror = function() {
-  console.log('Connection Error');
-};
+window.onload = function() {
 
-client.onopen = function() {
-  console.log('WebSocket Client Connected');
-  TRAKE.init();
-  client.send(JSON.stringify({type: "join", player_name: "client"}));
-};
+  var startButton = document.getElementById("start");
 
-client.onclose = function() {
-  console.log('client closed');
-};
 
-client.onmessage = function(e) {
-  var data = JSON.parse(e.data);
-  console.log(data);
+  client.onerror = function() {
+    console.log('Connection Error');
+  };
 
-  if (data.type === "initial") {
-    startButton.disabled = true;
-    TRAKE.initialTick(data);
-  } else if (data.type === "update") {
-    TRAKE.updateTick(data);
-  } else if (data.type === "end") {
-    startButton.disabled = false;
-    console.log('Game Over')
-  } else if (data.type === "confirm") {
-    TRAKE.setId(data.id);
-  }
-};
+  client.onopen = function() {
+    console.log('WebSocket Client Connected');
+    TRAKE.init();
+    client.send(JSON.stringify({type: "join", player_name: "client"}));
+  };
 
-window.onbeforeunload = function() {
-  client.onclose = function () {}; // disable onclose handler first
-  client.close()
+  client.onclose = function() {
+    console.log('client closed');
+  };
+
+  client.onmessage = function(e) {
+    var data = JSON.parse(e.data);
+    console.log(data);
+
+    if (data.type === "initial") {
+      startButton.disabled = true;
+      TRAKE.initialTick(data);
+    } else if (data.type === "update") {
+      TRAKE.updateTick(data);
+    } else if (data.type === "end") {
+      startButton.disabled = false;
+      console.log('Game Over')
+    } else if (data.type === "confirm") {
+      TRAKE.setId(data.id);
+    }
+  };
+
+  window.onbeforeunload = function() {
+    client.onclose = function () {}; // disable onclose handler first
+    client.close()
+  };
 };
