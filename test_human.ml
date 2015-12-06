@@ -429,29 +429,37 @@ let () = print_string "test updating direction\n"
 TEST_UNIT = Player.update_direction new_player Util.Up === false
 TEST_UNIT = Player.update_direction new_player Util.Left === true
 TEST_UNIT = Player.direction new_player === Util.Left
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Right === false
 TEST_UNIT = Player.update_direction new_player Util.Up === true
 TEST_UNIT = Player.direction new_player === Util.Up
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Down === false
 TEST_UNIT = Player.update_direction new_player Util.Right === true
 TEST_UNIT = Player.direction new_player === Util.Right
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Left === false
 TEST_UNIT = Player.update_direction new_player Util.Up === true
 TEST_UNIT = Player.direction new_player === Util.Up
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Down === false
 TEST_UNIT = Player.update_direction new_player Util.Left === true
 TEST_UNIT = Player.direction new_player === Util.Left
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Right === false
 TEST_UNIT = Player.update_direction new_player Util.Down === true
 TEST_UNIT = Player.direction new_player === Util.Down
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Up === false
 TEST_UNIT = Player.update_direction new_player Util.Right === true
 TEST_UNIT = Player.direction new_player === Util.Right
+let () = Grid.act new_grid
 TEST_UNIT = Player.update_direction new_player Util.Left === false
 TEST_UNIT = Player.update_direction new_player Util.Down === true
 TEST_UNIT = Player.direction new_player === Util.Down
-
+let () = Grid.act new_grid
 let _ = Player.update_direction new_player Util.Left
+let () = Grid.act new_grid
 let _ = Player.update_direction new_player Util.Up
 
 let () = print_string "test killing a human player\n"
@@ -459,38 +467,6 @@ let kill = Player.create_human 2 1000 (1, 1, 1) "thomas"
 let () = Player.kill kill
 TEST_UNIT = Player.tail kill === []
 TEST_UNIT = Player.is_alive kill === false
-
-let () = print_string "test updating a player's position\n"
-let () = Player.update_position new_player (2, 3)
-TEST_UNIT = Player.position new_player === (2, 3)
-TEST_UNIT = Player.tail new_player === []
-TEST_UNIT = Player.direction new_player === Util.Up
-
-let () = print_string "test advancing a player\n"
-let () = Player.advance new_player
-TEST_UNIT = Player.position new_player === (2, 2)
-TEST_UNIT = Player.tail new_player === [(2, 3)]
-TEST_UNIT = Player.direction new_player === Util.Up
-
-let () = print_string "test advancing a grid with one player\n"
-let () = Grid.act new_grid
-TEST_UNIT = Player.position new_player === (2, 1)
-TEST_UNIT = Player.tail new_player === [(2, 2)]
-TEST_UNIT = Player.is_alive new_player === true
-TEST_UNIT = Grid.status_of_cell new_grid (Player.position new_player) === 
-				Util.Player (Player.id new_player)
-TEST_UNIT = Grid.status_of_cell new_grid (2, 2) === 
-				Util.Trail (Player.id new_player)
-TEST_UNIT = Player.score new_player === 2
-
-let () = print_string "test killing a player when running into a wall\n"
-let () = Grid.act new_grid
-TEST_UNIT = Player.position new_player === (2, 0)
-TEST_UNIT = Player.tail new_player === []
-TEST_UNIT = Player.is_alive new_player === false
-TEST_UNIT = Grid.status_of_cell new_grid (Player.position new_player) === 
-				Util.Wall
-TEST_UNIT = Player.score new_player === 4
 
 let () = print_string "test grid with multiple human players\n"
 let grid2 = Grid.create (50, 50)
@@ -720,13 +696,13 @@ let dummy1 = Player.create_human 6 1 (1, 1, 1) "dummy1"
 let dummy2 = Player.create_human 7 1 (1, 1, 1) "dummy2"
 let test_grid = Grid.add_player test_grid dummy1
 let test_grid = Grid.add_player test_grid dummy2
-let () = Player.update_position dummy1 (5, 10)
-let () = Player.update_position dummy2 (5, 12)
+let () = Player.update_position dummy1 (4, 10)
+let () = Player.update_position dummy2 (6, 10)
 let _ = Player.update_direction dummy1 Util.Right
 let _ = Player.update_direction dummy2 Util.Left
 let () = Grid.act test_grid
-TEST_UNIT = Player.position dummy1 === (5, 11)
-TEST_UNIT = Player.position dummy2 === (5, 11)
+TEST_UNIT = Player.position dummy1 === (5, 10)
+TEST_UNIT = Player.position dummy2 === (5, 10)
 TEST_UNIT = Player.is_alive dummy1 === false
 TEST_UNIT = Player.is_alive dummy2 === false
 TEST_UNIT = Player.tail dummy1 === []
