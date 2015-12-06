@@ -208,6 +208,10 @@ TRAKE = {
 var SERVER_URL = "ws://" + location.hostname + ":3110/websocket",
     client = new WebSocket(SERVER_URL, []);
 
+function startGame(event) {
+  client.send(JSON.stringify({type: "start"}));
+}
+
 client.onerror = function() {
   console.log('Connection Error');
 };
@@ -227,10 +231,12 @@ client.onmessage = function(e) {
   console.log(data);
 
   if (data.type === "initial") {
+    startButton.disabled = true;
     TRAKE.initialTick(data);
   } else if (data.type === "update") {
     TRAKE.updateTick(data);
   } else if (data.type === "end") {
+    startButton.disabled = false;
     console.log('Game Over')
   } else if (data.type === "confirm") {
     TRAKE.setId(data.id);

@@ -714,4 +714,24 @@ TEST_UNIT = Player.is_alive fifth_player === true
 TEST_UNIT = Player.tail fifth_player === [(x1+1, y1); (x1, y1)]
 TEST_UNIT = Player.tail_length fifth_player === 2
 
+let () = print_string "test player hitting player\n"
+let test_grid = Grid.create (20, 20)
+let dummy1 = Player.create_human 6 1 (1, 1, 1) "dummy1"
+let dummy2 = Player.create_human 7 1 (1, 1, 1) "dummy2"
+let test_grid = Grid.add_player test_grid dummy1
+let test_grid = Grid.add_player test_grid dummy2
+let () = Player.update_position dummy1 (5, 10)
+let () = Player.update_position dummy2 (5, 12)
+let _ = Player.update_direction dummy1 Util.Right
+let _ = Player.update_direction dummy2 Util.Left
+let () = Grid.act test_grid
+TEST_UNIT = Player.position dummy1 === (5, 11)
+TEST_UNIT = Player.position dummy2 === (5, 11)
+TEST_UNIT = Player.is_alive dummy1 === false
+TEST_UNIT = Player.is_alive dummy2 === false
+TEST_UNIT = Player.tail dummy1 === []
+TEST_UNIT = Player.tail dummy2 === []
+TEST_UNIT = Player.score dummy1 === 2
+TEST_UNIT = Player.score dummy2 === 2
+
 let () = print_string "100% Passed\n"
