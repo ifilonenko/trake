@@ -1,8 +1,9 @@
 TRAKE = {
 
   ctx: null,
-
+  me: null,
   players: {},
+  walls: {},
 
   grid: {
     height: 640,
@@ -47,6 +48,11 @@ TRAKE = {
     }
   },
 
+  setId: function(id) {
+    this.me = id;
+    document.querySelector('.me').innerText = id;
+  },
+
   makeGrid: function() {
     var cellWidth = this.grid.width/this.grid.cols,
         cellHeight = this.grid.height/this.grid.rows,
@@ -72,22 +78,44 @@ TRAKE = {
       console.log(player);
 
       self.players[id] = player;
-      self.players[id].tail = [player.position];
+      self.players[id].newDeath = true;
       if (player.alive) {
+        self.players[id].tail = [player.position];
         self.setCell(player.position.x, player.position.y, player.color);
+      } else {
+        self.players[id].tail = []
       }
     });
   },
 
   killPlayer: function(player) {
-    var self = this;
+    var self = this,
+        x = player.position.x,
+        y = player.position.y,
+        segmentColor;
 
-    if (player.tail_length > -1) {
-      self.setCell(player.position.x, player.position.y, self.grid.color);
+    if (player.newDeath) {
+
+      if (player.id === self.me) {
+        document.querySelector('.me').innerText = 'You Died';
+      }
+
+      segmentColor = (
+          self.walls.hasOwnProperty("" + x + "|" + y) ?
+          self.grid.wallColor : self.grid.color
+        )
+
+      self.setCell(x, y, segmentColor);
+
       player.tail.map(function(segment) {
-        self.setCell(segment.x, segment.y, self.grid.color);
+        segmentColor = (
+          self.walls.hasOwnProperty("" + segment.x + "|" + segment.y) ?
+          self.grid.wallColor : self.grid.color
+        )
+        self.setCell(segment.x, segment.y, segmentColor);
       });
-      player.tail_length = -1;
+
+      player.newDeath = false;
     }
   },
 
@@ -137,8 +165,11 @@ TRAKE = {
     self.grid.cols = jsonData.dimensions.cols;
     self.makeGrid();
     jsonData.walls.map(function(wall) {
+      self.walls["" + wall.x + "|" + wall.y] = true;
       self.setCell(wall.x, wall.y, self.grid.wallColor);
     });
+
+    document.querySelector('.me').innerText = self.me;
 
     // Update Game
     self.updateFood(jsonData.food);
@@ -174,81 +205,51 @@ TRAKE = {
 
 }
 
-// Join Protocol
-//
-//
-// Joining during waiting period
-// =====
-// Client: CONNECT
-// Server: ACCEPT CONNECTION
-// Client: {player_name: "Eric"}
-// Server: {id: 0}
-// [Pause Until Waiting Period Ends]
-// Server: Tick0
-// [Pause 5 Seconds]
-// Server: Tick1
-// Client: {id: 0, direction: "Up"}
-// Server: Tick2
-// ...
+var SERVER_URL = "ws://" + location.hostname + ":3110/websocket",
+    client = new WebSocket(SERVER_URL, []);
 
-// Joining during running game
-// =====
-// Client: CONNECT
-// Server: ACCEPT CONNECTION
-// Client: {player_name: "Eric"}
-// Server: {id: 0}
-// [Pause Until Current Game Ends]
-// Server: Tick0
-// [Pause 5 Seconds]
-// Server: Tick1
-// Client: {id: 0, direction: "Up"}
-// Server: Tick2
-// ...
-
-var SERVER_URL = "ws://" + location.hostname + ":3110/websocket";
-
-var client = new WebSocket(SERVER_URL, []);
 function startGame(event) {
   client.send(JSON.stringify({type: "start"}));
 }
 
 window.onload = function() {
+
   var startButton = document.getElementById("start");
 
+
   client.onerror = function() {
-      console.log('Connection Error');
+    console.log('Connection Error');
   };
 
   client.onopen = function() {
-      console.log('WebSocket Client Connected');
-      TRAKE.init();
-      client.send(JSON.stringify({type: "join", player_name: "client"}));
+    console.log('WebSocket Client Connected');
+    TRAKE.init();
+    client.send(JSON.stringify({type: "join", player_name: "client"}));
   };
 
   client.onclose = function() {
-      console.log('client closed');
+    console.log('client closed');
   };
 
   client.onmessage = function(e) {
-      var data = JSON.parse(e.data);
-      console.log(data);
+    var data = JSON.parse(e.data);
+    console.log(data);
 
-      if (data.type === "initial") {
-        // mark start button inactive
-        startButton.disabled = true;
-        TRAKE.initialTick(data);
-      } else if (data.type === "update") {
-        TRAKE.updateTick(data);
-      } else if (data.type === "end") {
-        // mark start button active
-        startButton.disabled = false;
-        alert('Game Over')
-      }
+    if (data.type === "initial") {
+      startButton.disabled = true;
+      TRAKE.initialTick(data);
+    } else if (data.type === "update") {
+      TRAKE.updateTick(data);
+    } else if (data.type === "end") {
+      startButton.disabled = false;
+      console.log('Game Over')
+    } else if (data.type === "confirm") {
+      TRAKE.setId(data.id);
+    }
   };
 
   window.onbeforeunload = function() {
-      client.onclose = function () {}; // disable onclose handler first
-      client.close()
+    client.onclose = function () {}; // disable onclose handler first
+    client.close()
   };
-
-}
+};
