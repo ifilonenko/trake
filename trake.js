@@ -50,7 +50,6 @@ TRAKE = {
 
   setId: function(id) {
     this.me = id;
-    document.querySelector('.me').innerText = id;
   },
 
   makeGrid: function() {
@@ -74,14 +73,25 @@ TRAKE = {
     var self = this;
 
     players.map(function(player) {
-      var id = player.id;
-      console.log(player);
+      var id = player.id,
+          scoreItem;
 
       self.players[id] = player;
       self.players[id].newDeath = true;
       if (player.alive) {
         self.players[id].tail = [player.position];
         self.setCell(player.position.x, player.position.y, player.color);
+
+        scoreItem = document.createElement('li');
+        scoreItem.innerText = player.label + " - " + player.score;
+        scoreItem.id = "score" + id;
+        document.getElementById('scoreboard').appendChild(scoreItem);
+
+        console.log('BLAH',player.id,self.me);
+        if (id === self.me) {
+          document.getElementById("score" + id).classList.add('me');
+        }
+
       } else {
         self.players[id].tail = []
       }
@@ -97,8 +107,10 @@ TRAKE = {
     if (player.newDeath) {
 
       if (player.id === self.me) {
-        document.querySelector('.me').innerText = 'You Died';
+        // document.querySelector('.me').innerText = 'You Died';
       }
+
+      document.getElementById("score" + player.id).classList.add('dead');
 
       segmentColor = (
           self.walls.hasOwnProperty("" + x + "|" + y) ?
@@ -123,7 +135,9 @@ TRAKE = {
     var self = this;
 
     players.map(function(player) {
-      var p = self.players[player.id], tailDiff;
+      var p = self.players[player.id],
+          scoreItem = document.getElementById("score" + p.id),
+          tailDiff;
 
       // Convert head tile to a tail tile
       if (player.alive) {
@@ -139,6 +153,10 @@ TRAKE = {
         self.killPlayer(p);
         return
       }
+
+      //Update score
+      scoreItem.innerText = p.label + " - " + p.score;
+      scoreItem.style.order = p.score;
 
       // Move trake
       p.tail.push(p.position);
@@ -169,7 +187,7 @@ TRAKE = {
       self.setCell(wall.x, wall.y, self.grid.wallColor);
     });
 
-    document.querySelector('.me').innerText = self.me;
+    document.getElementById('scoreboard').innerHTML = '';
 
     // Update Game
     self.updateFood(jsonData.food);
@@ -188,7 +206,7 @@ TRAKE = {
   init: function() {
     var self = this;
 
-    self.ctx = document.querySelector('canvas').getContext('2d');
+    self.ctx = document.getElementById('grid').getContext('2d');
 
     document.onkeyup = function(e) {
       if (e.keyCode === 87 || e.keyCode === 38) {
@@ -224,7 +242,7 @@ window.onload = function() {
   client.onopen = function() {
     console.log('WebSocket Client Connected');
     TRAKE.init();
-    client.send(JSON.stringify({type: "join", player_name: "client"}));
+    client.send(JSON.stringify({type: "join", player_name: "Human " + (Math.floor(Math.random()*10000))}));
   };
 
   client.onclose = function() {

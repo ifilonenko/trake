@@ -3,7 +3,6 @@
     <style type="text/css">
     body {
       position: relative;
-      /*height: 100vh;*/
     }
     canvas {
       position: absolute;
@@ -11,11 +10,21 @@
       left: 50%;
       transform: translate(-50%,-50%);
     }
+    #scoreboard {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    #scoreboard .me {
+      font-weight: bold;
+    }
+    #scoreboard .dead {
+      text-decoration: line-through;
+    }
     </style>
   </head>
   <body>
-    <canvas width="640" height="640"></canvas>
-    <p class="me"></p>
+    <canvas id="grid" width="640" height="640"></canvas>
+    <ol id="scoreboard"></ol>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script type="text/javascript" src="trake.js"></script>
     <button id="start" type="button" value="Start Game" onclick="startGame();">Start Game</button>
