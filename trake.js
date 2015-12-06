@@ -207,37 +207,48 @@ TRAKE = {
 
 var SERVER_URL = "ws://" + location.hostname + ":3110/websocket";
 
-
 var client = new WebSocket(SERVER_URL, []);
+function startGame(event) {
+  client.send(JSON.stringify({type: "start"}));
+}
 
-client.onerror = function() {
-    console.log('Connection Error');
-};
+window.onload = function() {
+  var startButton = document.getElementById("start");
 
-client.onopen = function() {
-    console.log('WebSocket Client Connected');
-    TRAKE.init();
-    client.send(JSON.stringify({type: "join", player_name: "client"}));
-};
+  client.onerror = function() {
+      console.log('Connection Error');
+  };
 
-client.onclose = function() {
-    console.log('client closed');
-};
+  client.onopen = function() {
+      console.log('WebSocket Client Connected');
+      TRAKE.init();
+      client.send(JSON.stringify({type: "join", player_name: "client"}));
+  };
 
-client.onmessage = function(e) {
-    var data = JSON.parse(e.data);
-    console.log(data);
+  client.onclose = function() {
+      console.log('client closed');
+  };
 
-    if (data.type === "initial") {
-      TRAKE.initialTick(data);
-    } else if (data.type === "update") {
-      TRAKE.updateTick(data);
-    }else if (data.type === "end") {
-      alert('Game Over')
-    }
-};
+  client.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      console.log(data);
 
-window.onbeforeunload = function() {
-    client.onclose = function () {}; // disable onclose handler first
-    client.close()
-};
+      if (data.type === "initial") {
+        // mark start button inactive
+        startButton.disabled = true;
+        TRAKE.initialTick(data);
+      } else if (data.type === "update") {
+        TRAKE.updateTick(data);
+      } else if (data.type === "end") {
+        // mark start button active
+        startButton.disabled = false;
+        alert('Game Over')
+      }
+  };
+
+  window.onbeforeunload = function() {
+      client.onclose = function () {}; // disable onclose handler first
+      client.close()
+  };
+
+}

@@ -2,7 +2,7 @@ open Websocket_lwt
 open Lwt
 open Conduit_lwt_unix
 
-type msg = Initial | Update | Join of string | Turn of Util.direction | End | Confirm of bool | Unknown
+type msg = Start | Initial | Update | Join of string | Turn of Util.direction | End | Confirm of bool | Unknown
 
 type rules = {
   trail_length: int;
@@ -82,6 +82,7 @@ let parse msg =
       match t with
       | `String "turn" -> Turn (Util.direction_of_string (msg |> member "direction" |> to_string))
       | `String "join" -> Join (msg |> member "player_name" |> to_string)
+      | `String "start" -> Start
       | _ -> Unknown
       )
     | _ -> Unknown)
@@ -123,6 +124,7 @@ let count_players s =
     (0,0) (Grid.players s.grid)
 
 let rec tick s () =
+  try
   Lwt_unix.sleep (1. /. (rules s).ticks_per_second) >>= fun () ->
   let (hum, ai) = count_players s in
 
@@ -148,8 +150,9 @@ let rec tick s () =
   else
     let () = send_all_players s End in
     s.started <- false;
-    return () >>= start_ticking s
-
+    return ()
+    with
+    | _ -> print_endline "crashed"; return ()
 
 and start_ticking s () =
 try
@@ -183,6 +186,7 @@ try
     with
     | Failure x -> print_endline x; return ()
     | _ -> print_endline "crashed"; failwith "Unknown"
+
 (* Handles incoming communication from clients *)
 and receive_frame s id content =
     let open Yojson.Basic.Util in
@@ -200,16 +204,9 @@ and receive_frame s id content =
 
       | Join name ->
         let () = s.players <- ((id, name)::s.players) in
+        send s id (message s id (Confirm s.started))
 
-        let rtn = send s id (message s id (Confirm s.started)) in
-        let (hum, _) = count_players s in
-        let () = (
-          (* start game in 10 seconds after first player joins *)
-          if hum = 0 then
-            let _ = start_ticking s () in
-            ()
-          ) in
-        rtn
+      | Start -> if not s.started then async (start_ticking s); return ()
       | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"
       )
     | _ -> send s id "{ \"type\": \"error\", \"message\": \"Invalid message\" }"

@@ -253,12 +253,10 @@ let prune_player g player =
     g.food <- None
   | Util.Player x
   | Util.Trail x ->
-    let p = Util.unwrap (player_with_id g x) in
-    if Player.is_alive p then
-      let () = Player.add_score p SCORES.kill in
-      advance_and_kill player
-    else
-      ()
+      let p = Util.unwrap (player_with_id g x) in
+      if Player.is_alive p then
+        let () = Player.add_score p SCORES.kill in
+        advance_and_kill player
 
   | Util.Wall -> advance_and_kill player
 
@@ -269,8 +267,6 @@ let reset g =
   }
 
 let act g =
-
-
   (* Check if the cell they want to move into is occupied *)
   List.iter (prune_player g) (players g);
 
