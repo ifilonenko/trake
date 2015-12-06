@@ -31,7 +31,9 @@ let from_json_file path =
     walls = walls;
     dimensions = dims;
   }
-
+(* Creates a grid with size dims
+ * Must be greater than 20x20
+ *)
 let create dims =
   let (w, h) = dims in
   if (w < 20 || h < 20) then raise Invalid_Grid
@@ -61,6 +63,7 @@ let create dims =
 let dimensions g =
   g.dimensions
 
+(* Determines the cell_status of the cell in the grid given *)
 let status_of_cell g c =
   let (cols, rows) = (dimensions g) in
   let (x, y) = c in
@@ -107,10 +110,12 @@ let status_of_cell g c =
     with
     | _ -> Util.Wall
 
-(*TODO: Someone tell me what this is for?*)
 let helper g (x, y) =
   status_of_cell g (x, y) = Util.Empty
 
+(* Adds a player randomly to the board at a distance at least 3 away
+ * from a wall and the direction is set in the direction that has at
+ * least 3 empty spaces in front of it *)
 let rec add_player g p =
   (* TODO: Set the player's position and direction*)
   let () = Random.self_init() in
@@ -157,9 +162,11 @@ let rec add_player g p =
     else
     add_player g p
 
+(* Gets the players in the grid g *)
 let players g =
   g.players
 
+(* Removes a player with index i from grid g *)
 let remove_player g i =
   { g with
     players = List.filter (fun p ->
@@ -167,6 +174,7 @@ let remove_player g i =
         Player.id p <> i) (players g)
   }
 
+(* Updates the frontend with a json of the Grid *)
 let to_json_update g =
   let l = [
     ("players", `List (List.map Player.to_json_update (players g)))
@@ -178,7 +186,7 @@ let to_json_update g =
   in
 
   `Assoc l
-
+(* Updates the frontend with a json of the initial Grid *)
 let to_json_initial g =
   let (cols, rows) = dimensions g in
   let l = [
@@ -194,12 +202,15 @@ let to_json_initial g =
 
   `Assoc l
 
+(* Gets the walls in the grid g*)
 let get_walls g =
   g.walls
 
+(* Gets the food in the grid g *)
 let get_food g =
   g.food
 
+(* Spawns food randomly in the grid *)
 let rec spawn_food g =
   (* Choose a random empty location to spawn food into *)
   if g.food = None then
@@ -210,15 +221,18 @@ let rec spawn_food g =
     if (status_of_cell g (x, y) = Util.Empty) then g.food <- Some (x, y) else ()
     )
 
+(* Gets the players in the grid in the order they were added *)
 let players g =
   g.players
 
+(* Gets the player in the grid g with the id id *)
 let player_with_id g id =
   try
     Some (List.find (fun x -> Player.id x = id) (players g))
   with
   | _ -> None
 
+(* Determines what should happen to a player based on the next cell position *)
 let prune_player g player =
   let advance_and_kill player =
     if Player.is_alive player then
@@ -260,12 +274,14 @@ let prune_player g player =
 
   | Util.Wall -> advance_and_kill player
 
+(* Resets the grid g *)
 let reset g =
   { g with
     food = None;
     players = [];
   }
 
+(* Makes everything step in the grid *)
 let act g =
   (* Check if the cell they want to move into is occupied *)
   List.iter (prune_player g) (players g);

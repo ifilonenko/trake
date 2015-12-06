@@ -15,6 +15,7 @@ type t = {
   human: bool
 }
 
+(* Creates a human player *)
 let create_human id tl clr lbl =
   {
     id = id;
@@ -33,6 +34,7 @@ let create_human id tl clr lbl =
 
 let ai_count = ref (-1)
 
+(* Creates an AI player *)
 let create_ai tl clr =
   ai_count := !ai_count - 1;
   {
@@ -62,6 +64,7 @@ let is_ai p =
 let direction p =
   p.next_direction
 
+(* Sets the next direction of the player *)
 let update_direction p d =
   Util.(
   match (p.direction, d) with
@@ -108,6 +111,7 @@ let eat_food p =
 let position p =
   p.position
 
+(* Updates the frontend with a json of the player *)
 let to_json_update p =
   `Assoc [
     ("id", `Int (id p));
@@ -119,6 +123,7 @@ let to_json_update p =
     ("score", `Int (score p))
   ]
 
+(* Updates the frontend with the json of the initial players *)
 let to_json_initial p =
   let (r, g, b) = color p in
   match to_json_update p with
@@ -136,6 +141,7 @@ let occupies_cell p c =
   (position p) = c ||
     List.mem c (tail p)
 
+(* Makes the player advance in the grid *)
 let advance p =
   (* Get new position *)
   let () = p.direction <- p.next_direction in
@@ -163,6 +169,7 @@ let advance p =
   else
     p.position <- new_pos
 
+(* Resets a player *)
 let reset p =
   p.score <- 0;
   p.tail <- [];
