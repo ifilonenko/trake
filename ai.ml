@@ -1,23 +1,3 @@
-module Queue = struct
-  type 'a t = ('a list * 'a list) ref
-  exception Empty
-  let create () = ref ([], [])
-
-  let enqueue x queue =
-    let front, back = !queue in
-        queue := (x::front, back)
-
-  let rec dequeue queue =
-    match !queue with
-        | (front, x :: back) -> queue := (front, back);x
-        | ([], []) -> raise Empty
-        | (front, []) -> queue := ([], List.rev front); dequeue queue
-  let is_empty queue =
-    match !queue with
-        | ([],[]) -> true
-        | _ -> false
-end
-
 let max_val = function
   | [] -> failwith "empty list"
   | x::xs -> List.fold_left max x xs
@@ -79,19 +59,6 @@ let manhattan_distance pos1 pos2 =
 
 
 let shortest_food_finder p g =
-  (* let q = Queue.create () in *)
-  (* For now just check player position *)
-(*   let (pg_x,pg_y) = Grid.dimensions g in
-  let (g_x, g_y) = (pg_x-1,pg_y-1) in
-  let distance_hash = Hashtbl.create (pg_x * pg_y) in
-  let backpointer_hash = Hashtbl.create (pg_x * pg_y) in
-  let () = Queue.enqueue (ai_x, ai_y) q;Hashtbl.add distance_hash (ai_x, ai_y) 0
-  ;Hashtbl.add backpointer_hash (ai_x, ai_y) (ai_x, ai_y) in
-  let quit_loop = ref false in
-  while ((is_empty q)==false || ) do
-    let index = Queue.dequeue q in
-    match
-  done *)
   (* Djikstras doesn't make sense here because its too much computation per tick *)
   (* Instead just take manhattan distance *)
   let (ai_x, ai_y) = Player.position p in
@@ -128,7 +95,6 @@ let food_exists g =
 
 let do_djikstras_if_food_exists lst p g =
   if food_exists g
-  (* Need to implement djikstras here *)
   then sum_equal_lists lst (shortest_food_finder p g)
   else sum_equal_lists lst [0;0;0;0]
 
