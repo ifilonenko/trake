@@ -234,7 +234,19 @@ let prune_player g player =
 
   let status = status_of_cell g pos in
   match status with
-  | Util.Empty -> () (* all good, player can move here *)
+  | Util.Empty -> 
+    (* Kill players with the same next position *)
+    (let without_player = List.filter (fun x -> Player.id x <> Player.id player) 
+                          g.players 
+    in
+    List.iter (fun x -> let next_pos_x = Util.add_cells (Player.position x) 
+              (Util.vector_of_direction (Player.direction x)) in 
+              if next_pos_x = pos then
+                let () = advance_and_kill player in
+                advance_and_kill x
+              else
+                ()
+              ) without_player)
   | Util.Food ->
     Player.eat_food player;
     Player.add_score player SCORES.food;
