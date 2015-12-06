@@ -7,6 +7,7 @@ type t = {
   mutable score: int;
   mutable alive: bool;
   mutable direction: Util.direction;
+  mutable next_direction: Util.direction;
   mutable tail_length: int;
   mutable position: int * int;
   mutable tail: (int * int) list;
@@ -21,6 +22,7 @@ let create_human id tl clr lbl =
     color = clr;
     alive = true;
     direction = Util.Down;
+    next_direction = Util.Down;
     tail_length = tl;
     original_tail_length = tl;
     position = (1, 1);
@@ -39,6 +41,7 @@ let create_ai tl clr =
     color = clr;
     alive = true;
     direction = Util.Down;
+    next_direction = Util.Down;
     tail_length = tl;
     original_tail_length = tl;
     position = (1,1);
@@ -57,7 +60,7 @@ let is_ai p =
   not (p.human)
 
 let direction p =
-  p.direction
+  p.next_direction
 
 let update_direction p d =
   Util.(
@@ -66,7 +69,7 @@ let update_direction p d =
   | (Right, Left)
   | (Down, Up)
   | (Up, Down) -> false
-  | _ -> p.direction <- d; true
+  | _ -> p.next_direction <- d; true
   )
 
 let update_position p c =
@@ -135,6 +138,7 @@ let occupies_cell p c =
 
 let advance p =
   (* Get new position *)
+  let () = p.direction <- p.next_direction in
   let delta = Util.vector_of_direction (direction p) in
   let pos = position p in
   let new_pos = Util.add_cells pos delta in
